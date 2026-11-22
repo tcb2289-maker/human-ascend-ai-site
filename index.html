@@ -299,31 +299,68 @@
 var btn=document.getElementById('haChatBtn'),panel=document.getElementById('haChatPanel'),body=document.getElementById('haChatBody'),input=document.getElementById('haChatInput'),send=document.getElementById('haChatSend');
 var AUDIT='https://docs.google.com/forms/d/e/1FAIpQLSdt9glQg-B3oCgvebP7LPmN3Sy1bqu2-_66PigbDvSYSmufuQ/viewform';
 var ORDER='https://docs.google.com/forms/d/e/1FAIpQLSd5GtO83BKRQTfHRhhBIM7ZczHaU2CmQ2N20wYDFkRxk7Eadw/viewform';
-var step=0,lead={};
+var step=0,lead={},lang='en';
+var T={
+en:{hi:"Hi! I'm the Human Ascend AI assistant. Ask me about our website packages, the free website check, or type <b>start</b> and I'll take your details for a free check.",
+pricing:'Our packages: <b>Refresh</b> $499-$799 + $79/mo · <b>Growth</b> $999-$1,499 + $149/mo · <b>Full Stack</b> $1,999-$2,999 + $299/mo. Every package includes a modern rebuild on your own domain plus the AI chatbot. Online booking and Google Care are included in Growth and Full Stack. Want to order? <a href="'+ORDER+'" target="_blank" rel="noopener">Open the order form</a> — or type <b>start</b> for a free check first.',
+check:'The free website check takes about 30 seconds: we review your current site and send a plain-English report of what is costing you customers. Type <b>start</b> and I will take your details right here, or <a href="'+AUDIT+'" target="_blank" rel="noopener">open the form</a>.',
+human:'Of course — let me connect you to our owner right away. You can call us now: <a href="tel:+18334825701">(833) 482-5701</a> (nationwide) or <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). Or type <b>start</b>, leave your name and phone, and the owner will call you back.',
+book:'Online booking is a paid upgrade: a one-time $299 setup on Refresh, and included in Growth and Full Stack. The booking page is built on your own website and every booking lands on one front-desk calendar at your shop. Type <b>start</b> for a free check and we will map it for your business.',
+google:'Google Care — Google Business Profile optimization, review replies, and ongoing Google management — is +$99/mo on Refresh and included in Growth and Full Stack. At launch we always check once that your Google profile points to your new site.',
+domain:'You always keep your own domain, in your own account — we never hold it. We just receive one-time access to point it at your new site, and you can revoke that access anytime.',
+time:'Your free check arrives within 2 business days. Most rebuilds launch within 1-3 weeks, and your old site stays live the whole time — no downtime.',
+askName:'Great — first, what is your name?',askPhone:function(n){return 'Nice to meet you, '+n+'. What is the best phone number for your report?';},askSite:'Thanks. And what is your current website address? (If you don\'t have one yet, just say "none".)',
+done:function(){return 'Perfect — I have everything: <b>'+lead.name+'</b> · '+lead.phone+' · '+lead.site+'. Please tap here to send it to our team: <a href="'+AUDIT+'" target="_blank" rel="noopener">Confirm my free website check</a>. Your report arrives within 2 business days. Anything else I can help with?';},
+def:'I can help with pricing, the free website check, online booking, Google Care, and timelines. For anything else, type <b>human</b> and I will connect you to our owner — or type <b>start</b> for your free website check.'},
+vi:{hi:'Xin chào! Em là trợ lý AI của Human Ascend. Anh/chị cứ hỏi về các gói website, chương trình kiểm tra web miễn phí, hoặc gõ <b>start</b> để em lấy thông tin làm bản kiểm tra miễn phí cho mình.',
+pricing:'Các gói của bên em: <b>Refresh</b> $499-$799 + $79/tháng · <b>Growth</b> $999-$1,499 + $149/tháng · <b>Full Stack</b> $1,999-$2,999 + $299/tháng. Gói nào cũng gồm làm lại web hiện đại trên chính tên miền của anh/chị, kèm chatbot AI. Đặt lịch online và chăm sóc Google có sẵn trong gói Growth và Full Stack. Muốn đặt gói? <a href="'+ORDER+'" target="_blank" rel="noopener">Mở form đặt hàng</a> — hoặc gõ <b>start</b> để kiểm tra miễn phí trước.',
+check:'Kiểm tra web miễn phí chỉ mất khoảng 30 giây: đội em xem web hiện tại của anh/chị và gửi báo cáo dễ hiểu về những điểm đang làm mất khách. Gõ <b>start</b> để em lấy thông tin ngay tại đây, hoặc <a href="'+AUDIT+'" target="_blank" rel="noopener">mở form</a>.',
+human:'Dạ được — em nối máy cho chủ bên em ngay. Anh/chị gọi thẳng: <a href="tel:+18334825701">(833) 482-5701</a> (toàn quốc) hoặc <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). Hoặc gõ <b>start</b>, để lại tên và số điện thoại, chủ bên em sẽ gọi lại.',
+book:'Đặt lịch online là phần nâng cấp: phí cài đặt một lần $299 ở gói Refresh, và có sẵn trong gói Growth và Full Stack. Trang đặt lịch nằm ngay trên web của anh/chị, mọi lịch hẹn về chung một lịch ở quầy lễ tân. Gõ <b>start</b> để kiểm tra miễn phí, đội em sẽ tư vấn đúng cho tiệm mình.',
+google:'Google Care — tối ưu hồ sơ Google, trả lời đánh giá, quản lý Google hằng tháng — là +$99/tháng ở gói Refresh, có sẵn trong Growth và Full Stack. Khi bàn giao, đội em luôn kiểm tra một lần để chắc chắn hồ sơ Google trỏ đúng về web mới.',
+domain:'Tên miền luôn là của anh/chị, nằm trong tài khoản của anh/chị — bên em không giữ. Đội em chỉ nhận quyền truy cập một lần để trỏ tên miền về web mới, anh/chị thu hồi lúc nào cũng được.',
+time:'Bản kiểm tra miễn phí sẽ gửi trong vòng 2 ngày làm việc. Hầu hết web làm lại xong trong 1-3 tuần, và web cũ vẫn chạy bình thường trong suốt thời gian đó — không gián đoạn.',
+askName:'Dạ tốt quá — trước tiên, anh/chị cho em xin tên ạ?',askPhone:function(n){return 'Rất vui được gặp anh/chị '+n+'. Số điện thoại tốt nhất để đội em gửi báo cáo là số nào ạ?';},askSite:'Cảm ơn anh/chị. Địa chỉ website hiện tại của mình là gì ạ? (Chưa có web thì cứ ghi "chưa có".)',
+done:function(){return 'Hoàn tất — em đã có đủ thông tin: <b>'+lead.name+'</b> · '+lead.phone+' · '+lead.site+'. Anh/chị bấm vào đây để gửi về đội em nhé: <a href="'+AUDIT+'" target="_blank" rel="noopener">Xác nhận kiểm tra web miễn phí</a>. Báo cáo sẽ về trong vòng 2 ngày làm việc. Anh/chị cần em giúp thêm gì nữa không ạ?';},
+def:'Em hỗ trợ được về giá gói, kiểm tra web miễn phí, đặt lịch online, Google Care và thời gian làm web. Việc khác, anh/chị gõ <b>human</b> để em nối với chủ bên em — hoặc gõ <b>start</b> để kiểm tra web miễn phí.'},
+es:{hi:'¡Hola! Soy el asistente de IA de Human Ascend. Pregúnteme por nuestros paquetes de sitios web, la revisión gratuita, o escriba <b>start</b> y tomaré sus datos para una revisión gratuita.',
+pricing:'Nuestros paquetes: <b>Refresh</b> $499-$799 + $79/mes · <b>Growth</b> $999-$1,499 + $149/mes · <b>Full Stack</b> $1,999-$2,999 + $299/mes. Todos incluyen un sitio moderno en su propio dominio más el chatbot con IA. Las reservas en línea y Google Care están incluidos en Growth y Full Stack. ¿Quiere ordenar? <a href="'+ORDER+'" target="_blank" rel="noopener">Abra el formulario de pedido</a> — o escriba <b>start</b> para una revisión gratuita primero.',
+check:'La revisión gratuita toma unos 30 segundos: analizamos su sitio actual y le enviamos un informe claro de lo que le está costando clientes. Escriba <b>start</b> y tomaré sus datos aquí mismo, o <a href="'+AUDIT+'" target="_blank" rel="noopener">abra el formulario</a>.',
+human:'Por supuesto — le conecto con nuestro dueño de inmediato. Puede llamarnos ahora: <a href="tel:+18334825701">(833) 482-5701</a> (todo EE. UU.) o <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). O escriba <b>start</b>, deje su nombre y teléfono, y el dueño le devolverá la llamada.',
+book:'Las reservas en línea son una mejora paga: instalación única de $299 en Refresh, e incluidas en Growth y Full Stack. La página de reservas se crea en su propio sitio y cada reserva llega a un solo calendario en su negocio. Escriba <b>start</b> para una revisión gratuita.',
+google:'Google Care — optimización de su perfil de Google, respuestas a reseñas y gestión continua — cuesta +$99/mes en Refresh y está incluido en Growth y Full Stack.',
+domain:'Usted siempre conserva su propio dominio, en su propia cuenta — nunca lo retenemos. Solo recibimos acceso una vez para apuntarlo a su sitio nuevo, y puede revocarlo cuando quiera.',
+time:'Su revisión gratuita llega en 2 días laborables. La mayoría de los sitios nuevos se lanzan en 1-3 semanas, y su sitio actual sigue activo todo el tiempo.',
+askName:'Perfecto — primero, ¿cuál es su nombre?',askPhone:function(n){return 'Encantado, '+n+'. ¿Cuál es el mejor número de teléfono para su informe?';},askSite:'Gracias. ¿Y cuál es la dirección de su sitio web actual? (Si aún no tiene, escriba "ninguno".)',
+done:function(){return 'Listo — ya tengo todo: <b>'+lead.name+'</b> · '+lead.phone+' · '+lead.site+'. Toque aquí para enviarlo a nuestro equipo: <a href="'+AUDIT+'" target="_blank" rel="noopener">Confirmar mi revisión gratuita</a>. Su informe llega en 2 días laborables. ¿Algo más en lo que pueda ayudarle?';},
+def:'Puedo ayudarle con precios, la revisión gratuita, reservas en línea, Google Care y plazos. Para cualquier otra cosa, escriba <b>human</b> y le conecto con nuestro dueño — o escriba <b>start</b> para su revisión gratuita.'}};
+function detect(t){var s=' '+t.toLowerCase()+' ';
+ if(/[àáâãèéêìíòóôõùúăđĩũơạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i.test(t)||s.indexOf(' xin ')>-1||s.indexOf(' chào ')>-1||s.indexOf(' giá ')>-1||s.indexOf(' muốn ')>-1||s.indexOf(' kiểm ')>-1||s.indexOf(' người thật ')>-1||s.indexOf(' đặt lịch ')>-1)return 'vi';
+ if(s.indexOf(' hola ')>-1||s.indexOf(' precio')>-1||s.indexOf(' cuánto')>-1||s.indexOf(' cuanto')>-1||s.indexOf(' quiero ')>-1||s.indexOf(' gratis ')>-1||s.indexOf(' teléfono')>-1||s.indexOf(' telefono')>-1||s.indexOf(' reserv')>-1)return 'es';
+ return null;}
 function add(t,me){var d=document.createElement('div');d.className='haMsg '+(me?'haUser':'haBot');d.innerHTML=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}
 function bot(t){setTimeout(function(){add(t,false)},250);}
-btn.onclick=function(){panel.classList.toggle('open');if(panel.classList.contains('open')&&!body.children.length){bot("Hi! I'm the Human Ascend AI assistant. Ask me about our website packages, the free website check, or type <b>start</b> and I'll take your details for a free check.");}};
-function human(){bot('Of course — let me connect you to our owner right away. You can call us now: <a href="tel:+18334825701">(833) 482-5701</a> (nationwide) or <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). Or type <b>start</b>, leave your name and phone, and the owner will call you back.');}
-function pricing(){bot('Our packages: <b>Refresh</b> $499-$799 + $79/mo · <b>Growth</b> $999-$1,499 + $149/mo · <b>Full Stack</b> $1,999-$2,999 + $299/mo. Every package includes a modern rebuild on your own domain plus the AI chatbot. Online booking and Google Care are included in Growth and Full Stack. Want to order? <a href="'+ORDER+'" target="_blank" rel="noopener">Open the order form</a> — or type <b>start</b> for a free check first.');}
-function check(){bot('The free website check takes about 30 seconds: we review your current site and send a plain-English report of what is costing you customers. Type <b>start</b> and I will take your details right here, or <a href="'+AUDIT+'" target="_blank" rel="noopener">open the form</a>.');}
+btn.onclick=function(){panel.classList.toggle('open');if(panel.classList.contains('open')&&!body.children.length){bot(T[lang].hi);}};
 function flow(t){
- if(step===1){lead.name=t;step=2;bot('Nice to meet you, '+t+'. What is the best phone number for your report?');return;}
- if(step===2){lead.phone=t;step=3;bot('Thanks. And what is your current website address? (If you don\'t have one yet, just say "none".)');return;}
- if(step===3){lead.site=t;step=0;bot('Perfect — I have everything: <b>'+lead.name+'</b> · '+lead.phone+' · '+lead.site+'. Please tap here to send it to our team: <a href="'+AUDIT+'" target="_blank" rel="noopener">Confirm my free website check</a>. Your report arrives within 2 business days. Anything else I can help with?');return;}
+ var d=detect(t);if(d)lang=d;var L=T[lang];
+ if(step===1){lead.name=t;step=2;bot(L.askPhone(t));return;}
+ if(step===2){lead.phone=t;step=3;bot(L.askSite);return;}
+ if(step===3){lead.site=t;step=0;bot(L.done());return;}
  var s=t.toLowerCase();
- if(s==='start'||s.indexOf('free')>-1&&s.indexOf('check')>-1){if(s==='start'){step=1;bot('Great — first, what is your name?');}else check();return;}
- if(s.indexOf('price')>-1||s.indexOf('pricing')>-1||s.indexOf('cost')>-1||s.indexOf('package')>-1){pricing();return;}
- if(s.indexOf('human')>-1||s.indexOf('person')>-1||s.indexOf('owner')>-1||s.indexOf('call me')>-1){human();return;}
- if(s.indexOf('book')>-1){bot('Online booking is a paid upgrade: a one-time $299 setup on Refresh, and included in Growth and Full Stack. The booking page is built on your own website and every booking lands on one front-desk calendar at your shop. Type <b>start</b> for a free check and we will map it for your business.');return;}
- if(s.indexOf('google')>-1){bot('Google Care — Google Business Profile optimization, review replies, and ongoing Google management — is +$99/mo on Refresh and included in Growth and Full Stack. At launch we always check once that your Google profile points to your new site.');return;}
- if(s.indexOf('domain')>-1){bot('You always keep your own domain, in your own account — we never hold it. We just receive one-time access to point it at your new site, and you can revoke that access anytime.');return;}
- if(s.indexOf('long')>-1||s.indexOf('time')>-1){bot('Your free check arrives within 2 business days. Most rebuilds launch within 1-3 weeks, and your old site stays live the whole time — no downtime.');return;}
- if(s.indexOf('hi')===0||s.indexOf('hello')===0){bot('Hello! Ask me about pricing, the free website check, online booking, or Google Care — or type <b>start</b> to begin your free check.');return;}
- bot('I can help with pricing, the free website check, online booking, Google Care, and timelines. For anything else, type <b>human</b> and I will connect you to our owner — or type <b>start</b> for your free website check.');
+ if(s==='start'||s==='bắt đầu'||s==='empezar'){step=1;bot(L.askName);return;}
+ if(s.indexOf('free')>-1&&s.indexOf('check')>-1||s.indexOf('kiểm tra')>-1||s.indexOf('revisión')>-1||s.indexOf('revision')>-1){bot(L.check);return;}
+ if(s.indexOf('price')>-1||s.indexOf('pricing')>-1||s.indexOf('cost')>-1||s.indexOf('package')>-1||s.indexOf('giá')>-1||s.indexOf('gia ')===0||s.indexOf('precio')>-1||s.indexOf('cuánto')>-1||s.indexOf('cuanto')>-1){bot(L.pricing);return;}
+ if(s.indexOf('human')>-1||s.indexOf('person')>-1||s.indexOf('owner')>-1||s.indexOf('call me')>-1||s.indexOf('người thật')>-1||s.indexOf('persona real')>-1||s.indexOf('dueño')>-1){bot(L.human);return;}
+ if(s.indexOf('book')>-1||s.indexOf('đặt lịch')>-1||s.indexOf('reserv')>-1){bot(L.book);return;}
+ if(s.indexOf('google')>-1){bot(L.google);return;}
+ if(s.indexOf('domain')>-1||s.indexOf('tên miền')>-1||s.indexOf('dominio')>-1){bot(L.domain);return;}
+ if(s.indexOf('long')>-1||s.indexOf('bao lâu')>-1||s.indexOf('cuánto tiempo')>-1||s.indexOf('cuanto tiempo')>-1){bot(L.time);return;}
+ if(s.indexOf('hi')===0||s.indexOf('hello')===0||s.indexOf('chào')>-1||s.indexOf('hola')===1){bot(L.hi);return;}
+ bot(L.def);
 }
 function go(){var t=input.value.trim();if(!t)return;add(t,true);input.value='';flow(t);}
 send.onclick=go;input.addEventListener('keydown',function(e){if(e.key==='Enter')go();});
-document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');if(q==='pricing')pricing();else if(q==='check')check();else human();};});
+document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');var L=T[lang];if(q==='pricing')bot(L.pricing);else if(q==='check')bot(L.check);else bot(L.human);};});
 })();
 </script>
 
