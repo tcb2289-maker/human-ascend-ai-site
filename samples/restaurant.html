@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casa Verde Kitchen — San Diego, CA (Sample Website)</title>
+<meta name="description" content="Sample website built by Human Ascend AI: Casa Verde Kitchen, a fictional Mexican restaurant in San Diego, CA.">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#FAF5EC;color:#33261C;line-height:1.6;padding-top:40px}
+  .habar{position:fixed;top:0;left:0;right:0;height:40px;background:#0A0F2C;color:#EDF1FF;display:flex;align-items:center;justify-content:center;gap:14px;font-size:13px;z-index:99;padding:0 10px;text-align:center}
+  .habar a{color:#14E0C8;font-weight:700;text-decoration:none}
+  .habar .cta{background:#14E0C8;color:#04231D;border-radius:999px;padding:3px 12px}
+  header.site{background:#FFFDF8;border-bottom:1px solid #EBDCC4;position:sticky;top:40px;z-index:10}
+  .nav{max-width:1020px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .logo{font-size:23px;font-weight:800;color:#3E6B34}
+  .logo span{color:#B5502A;font-weight:600;font-size:15px;display:block;letter-spacing:2px;text-transform:uppercase}
+  .nav a.tel{color:#33261C;text-decoration:none;font-weight:700;border:1px solid #E3CDB2;border-radius:999px;padding:7px 16px}
+  .hero{background:linear-gradient(135deg,#F6E3C2 0%,#EFC394 48%,#D98E5F 100%);text-align:center;padding:74px 20px 64px}
+  .hero h1{font-size:clamp(32px,6vw,52px);line-height:1.12;font-weight:900;color:#5E2B12;margin-bottom:16px}
+  .hero p{max-width:640px;margin:0 auto 28px;color:#6E4A30;font-size:18px}
+  .btn{display:inline-block;background:#B5502A;color:#fff;font-weight:800;text-decoration:none;padding:14px 30px;border-radius:999px;font-size:16px}
+  .btn.alt{background:#fff;color:#B5502A;border:2px solid #B5502A}
+  section{padding:54px 20px}
+  .wrap{max-width:1020px;margin:0 auto}
+  h2{font-size:clamp(25px,4vw,34px);font-weight:800;color:#5E2B12;margin-bottom:8px;text-align:center}
+  .sub{text-align:center;color:#97795B;margin-bottom:32px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .dish{background:#FFFDF8;border:1px solid #EBDCC4;border-radius:14px;padding:22px}
+  .dish h3{font-size:18px;display:flex;justify-content:space-between;gap:10px}
+  .dish h3 b{color:#B5502A;white-space:nowrap}
+  .dish p{color:#97795B;font-size:15px;margin-top:6px}
+  .gal{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .tile{height:170px;border-radius:14px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+  .t1{background:linear-gradient(150deg,#D98E5F,#A34A24)}
+  .t2{background:linear-gradient(150deg,#7FA36B,#3E6B34)}
+  .t3{background:linear-gradient(150deg,#E5B84F,#B57E27)}
+  .t4{background:linear-gradient(150deg,#8A4B3A,#5E2B12)}
+  .info{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .box{background:#FFFDF8;border:1px solid #EBDCC4;border-radius:14px;padding:24px}
+  .box h3{color:#5E2B12;margin-bottom:10px}
+  .box p,.box li{color:#6E4A30;font-size:15.5px}
+  .box ul{list-style:none}
+  .box li{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #EBDCC4}
+  .box li:last-child{border-bottom:none}
+  .cta-band{background:#3E2A18;color:#FBEEDC;text-align:center;padding:52px 20px}
+  .cta-band h2{color:#fff}
+  .cta-band p{max-width:600px;margin:0 auto 24px;color:#E8CCA6}
+  .cta-band .btn{background:#14E0C8;color:#04231D}
+  footer{padding:28px 20px;text-align:center;color:#97795B;font-size:14px}
+  #chatBtn{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;background:#B5502A;color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:50}
+  #chatPanel{position:fixed;right:18px;bottom:86px;width:min(330px,calc(100vw - 36px));background:#fff;border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.3);display:none;flex-direction:column;overflow:hidden;z-index:50}
+  #chatPanel.open{display:flex}
+  #chatHead{background:#B5502A;color:#fff;padding:13px 16px;font-weight:800}
+  #chatHead span{display:block;font-weight:400;font-size:13px;opacity:.9}
+  #chatBody{padding:14px;height:230px;overflow-y:auto;font-size:14.5px}
+  .msg{background:#F8EBD9;border-radius:12px;padding:9px 12px;margin-bottom:9px}
+  .msg.me{background:#EFEFEF;text-align:right}
+  #chatQuick{display:flex;gap:8px;padding:0 14px 14px;flex-wrap:wrap}
+  #chatQuick button{border:1px solid #B5502A;color:#B5502A;background:#fff;border-radius:999px;padding:6px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="habar"><span>✦ SAMPLE WEBSITE — built by <a href="https://humanascendai.com">Human Ascend AI</a></span><a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSdt9glQg-B3oCgvebP7LPmN3Sy1bqu2-_66PigbDvSYSmufuQ/viewform" target="_blank" rel="noopener">Get a site like this — FREE check</a></div>
+
+<header class="site">
+  <div class="nav">
+    <div class="logo">Casa Verde<span>Kitchen · San Diego</span></div>
+    <a class="tel" href="tel:+16195550117">☎ (619) 555-0117</a>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Real Mexican food,<br>made the slow way.</h1>
+  <p>Family recipes, fresh tortillas every morning, and a patio made for golden hour. Reserve a table or order takeout in seconds.</p>
+  <a class="btn" href="#visit">Reserve a table</a>&nbsp; <a class="btn alt" href="#menu">See the menu</a>
+</div>
+
+<section id="menu">
+  <div class="wrap">
+    <h2>Menu Favorites</h2>
+    <p class="sub">Made from scratch daily — when it's gone, it's gone.</p>
+    <div class="grid">
+      <div class="dish"><h3>Baja Fish Tacos <b>$16</b></h3><p>Crispy battered fish, cabbage slaw, chipotle crema, two per order.</p></div>
+      <div class="dish"><h3>Carne Asada Plate <b>$24</b></h3><p>Grilled steak, rice, beans, guacamole and warm tortillas.</p></div>
+      <div class="dish"><h3>Chicken Mole <b>$21</b></h3><p>Our grandmother's mole — 27 ingredients, simmered all day.</p></div>
+      <div class="dish"><h3>Guacamole &amp; Chips <b>$11</b></h3><p>Made to order at your table, as spicy as you dare.</p></div>
+      <div class="dish"><h3>Agua Fresca <b>$5</b></h3><p>Hibiscus, horchata or tamarind — fresh every morning.</p></div>
+      <div class="dish"><h3>Churros con Chocolate <b>$8</b></h3><p>Cinnamon sugar churros with thick chocolate for dipping.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>From Our Kitchen</h2>
+    <p class="sub">A taste of what's on the pass tonight.</p>
+    <div class="gal">
+      <div class="tile t1">Tacos al Pastor</div>
+      <div class="tile t2">Verde Enchiladas</div>
+      <div class="tile t3">Elote Street Corn</div>
+      <div class="tile t4">Mole Poblano</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0" id="visit">
+  <div class="wrap">
+    <div class="info">
+      <div class="box"><h3>Hours</h3><ul>
+        <li><span>Tue – Fri</span><b>11:00 AM – 9:00 PM</b></li>
+        <li><span>Sat – Sun</span><b>10:00 AM – 9:00 PM</b></li>
+        <li><span>Monday</span><b>Closed</b></li></ul></div>
+      <div class="box"><h3>Find Us</h3>
+        <p>812 Palm Canyon Ave<br>San Diego, CA 92103</p>
+        <p style="margin-top:10px">☎ (619) 555-0117<br>✉ hola@casaverdekitchen.example</p>
+        <p style="margin-top:10px">Questions about large parties or catering? Tap the chat bubble — it answers 24/7 and takes reservations.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2>Like this website?</h2>
+  <p>This is a sample site built by Human Ascend AI — a full menu customers can actually read on their phones, plus a chatbot that takes reservations day and night. Your restaurant could have one just like it, on your own domain.</p>
+  <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdt9glQg-B3oCgvebP7LPmN3Sy1bqu2-_66PigbDvSYSmufuQ/viewform" target="_blank" rel="noopener">Get My Free Website Check</a>
+</div>
+
+<footer>Casa Verde Kitchen is a fictional business created to demonstrate a Human Ascend AI website. · Sample by <a href="https://humanascendai.com" style="color:#B5502A">Human Ascend AI</a></footer>
+
+<button id="chatBtn" aria-label="Chat with Casa Verde">💬</button>
+<div id="chatPanel">
+  <div id="chatHead">Casa Verde Assistant<span>Replies instantly — 24/7</span></div>
+  <div id="chatBody"><div class="msg">¡Hola! 👋 Welcome to Casa Verde. Ask me about the menu, hours, or reserving a table.</div></div>
+  <div id="chatQuick">
+    <button data-q="hours">Hours</button>
+    <button data-q="menu">Menu prices</button>
+    <button data-q="book">Reserve</button>
+  </div>
+</div>
+<script>
+var ANS={hours:"We're open Tue–Fri 11 AM–9 PM and Sat–Sun 10 AM–9 PM. Closed Mondays.",menu:"Favorites: Baja Fish Tacos $16 · Carne Asada Plate $24 · Chicken Mole $21 · Churros $8. The full menu is above.",book:"We'd love to host you! Call (619) 555-0117 or tell me your party size and time here — we'll confirm by text."};
+var btn=document.getElementById('chatBtn'),panel=document.getElementById('chatPanel'),body=document.getElementById('chatBody');
+btn.onclick=function(){panel.classList.toggle('open');};
+document.querySelectorAll('#chatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');body.innerHTML+='<div class="msg me">'+b.textContent+'</div><div class="msg">'+ANS[q]+'</div>';body.scrollTop=body.scrollHeight;};});
+</script>
+</body>
+</html>

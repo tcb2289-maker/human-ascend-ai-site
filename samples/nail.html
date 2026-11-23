@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lotus Glow Nail Studio — Austin, TX (Sample Website)</title>
+<meta name="description" content="Sample website built by Human Ascend AI: Lotus Glow Nail Studio, a fictional nail salon in Austin, TX.">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#FBF6F1;color:#3A2A2E;line-height:1.6;padding-top:40px}
+  .habar{position:fixed;top:0;left:0;right:0;height:40px;background:#0A0F2C;color:#EDF1FF;display:flex;align-items:center;justify-content:center;gap:14px;font-size:13px;z-index:99;padding:0 10px;text-align:center}
+  .habar a{color:#14E0C8;font-weight:700;text-decoration:none}
+  .habar .cta{background:#14E0C8;color:#04231D;border-radius:999px;padding:3px 12px}
+  header.site{background:#fff;border-bottom:1px solid #EFDFD8;position:sticky;top:40px;z-index:10}
+  .nav{max-width:1020px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .logo{font-size:23px;font-weight:800;color:#B4556E;letter-spacing:.3px}
+  .logo span{color:#3A2A2E;font-weight:600;font-size:15px;display:block;letter-spacing:2px;text-transform:uppercase}
+  .nav a.tel{color:#3A2A2E;text-decoration:none;font-weight:700;border:1px solid #E5C9CF;border-radius:999px;padding:7px 16px}
+  .hero{background:linear-gradient(135deg,#F7DFE4 0%,#F3CBD5 45%,#E8A9BC 100%);text-align:center;padding:74px 20px 64px}
+  .hero h1{font-size:clamp(32px,6vw,52px);line-height:1.12;font-weight:900;color:#5C2333;margin-bottom:16px}
+  .hero p{max-width:640px;margin:0 auto 28px;color:#6E4753;font-size:18px}
+  .btn{display:inline-block;background:#B4556E;color:#fff;font-weight:800;text-decoration:none;padding:14px 30px;border-radius:999px;font-size:16px}
+  .btn.alt{background:#fff;color:#B4556E;border:2px solid #B4556E}
+  section{padding:54px 20px}
+  .wrap{max-width:1020px;margin:0 auto}
+  h2{font-size:clamp(25px,4vw,34px);font-weight:800;color:#5C2333;margin-bottom:8px;text-align:center}
+  .sub{text-align:center;color:#8A6570;margin-bottom:32px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .svc{background:#fff;border:1px solid #EFDFD8;border-radius:14px;padding:22px}
+  .svc h3{font-size:18px;display:flex;justify-content:space-between;gap:10px}
+  .svc h3 b{color:#B4556E;white-space:nowrap}
+  .svc p{color:#8A6570;font-size:15px;margin-top:6px}
+  .gal{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .tile{height:170px;border-radius:14px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.35)}
+  .t1{background:linear-gradient(150deg,#E8A9BC,#C4687F)}
+  .t2{background:linear-gradient(150deg,#F2C94C,#D98E4A)}
+  .t3{background:linear-gradient(150deg,#9BB8A6,#5F8577)}
+  .t4{background:linear-gradient(150deg,#B79CED,#7E5FBF)}
+  .info{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .box{background:#fff;border:1px solid #EFDFD8;border-radius:14px;padding:24px}
+  .box h3{color:#5C2333;margin-bottom:10px}
+  .box p,.box li{color:#6E4753;font-size:15.5px}
+  .box ul{list-style:none}
+  .box li{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #EFDFD8}
+  .box li:last-child{border-bottom:none}
+  .cta-band{background:#5C2333;color:#FBEFF2;text-align:center;padding:52px 20px}
+  .cta-band h2{color:#fff}
+  .cta-band p{max-width:600px;margin:0 auto 24px;color:#EFC9D2}
+  .cta-band .btn{background:#14E0C8;color:#04231D}
+  footer{padding:28px 20px;text-align:center;color:#8A6570;font-size:14px}
+  #chatBtn{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;background:#B4556E;color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:50}
+  #chatPanel{position:fixed;right:18px;bottom:86px;width:min(330px,calc(100vw - 36px));background:#fff;border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.3);display:none;flex-direction:column;overflow:hidden;z-index:50}
+  #chatPanel.open{display:flex}
+  #chatHead{background:#B4556E;color:#fff;padding:13px 16px;font-weight:800}
+  #chatHead span{display:block;font-weight:400;font-size:13px;opacity:.9}
+  #chatBody{padding:14px;height:230px;overflow-y:auto;font-size:14.5px}
+  .msg{background:#F7E8EC;border-radius:12px;padding:9px 12px;margin-bottom:9px}
+  .msg.me{background:#EFEFEF;text-align:right}
+  #chatQuick{display:flex;gap:8px;padding:0 14px 14px;flex-wrap:wrap}
+  #chatQuick button{border:1px solid #B4556E;color:#B4556E;background:#fff;border-radius:999px;padding:6px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="habar"><span>✦ SAMPLE WEBSITE — built by <a href="https://humanascendai.com">Human Ascend AI</a></span><a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSdt9glQg-B3oCgvebP7LPmN3Sy1bqu2-_66PigbDvSYSmufuQ/viewform" target="_blank" rel="noopener">Get a site like this — FREE check</a></div>
+
+<header class="site">
+  <div class="nav">
+    <div class="logo">Lotus Glow<span>Nail Studio · Austin</span></div>
+    <a class="tel" href="tel:+15125550148">☎ (512) 555-0148</a>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Beautiful nails,<br>zero waiting games.</h1>
+  <p>Walk-ins welcome, appointments in two taps. Lotus Glow is Austin's cozy corner for gel, spa pedicures and hand-painted nail art.</p>
+  <a class="btn" href="#book">Book an appointment</a>&nbsp; <a class="btn alt" href="#services">See services &amp; prices</a>
+</div>
+
+<section id="services">
+  <div class="wrap">
+    <h2>Services &amp; Prices</h2>
+    <p class="sub">Clear prices, no surprises at the register.</p>
+    <div class="grid">
+      <div class="svc"><h3>Classic Manicure <b>$28</b></h3><p>Shape, cuticle care, massage and regular polish.</p></div>
+      <div class="svc"><h3>Gel Manicure <b>$48</b></h3><p>Chip-free gel color that lasts up to three weeks.</p></div>
+      <div class="svc"><h3>Lotus Spa Pedicure <b>$52</b></h3><p>Soak, scrub, hot towels, massage and polish.</p></div>
+      <div class="svc"><h3>Gel-X Extensions <b>$68</b></h3><p>Lightweight length with a natural feel.</p></div>
+      <div class="svc"><h3>Kids Mani-Pedi <b>$30</b></h3><p>Gentle care for guests 12 and under.</p></div>
+      <div class="svc"><h3>Hand-Painted Nail Art <b>from $10</b></h3><p>Seasonal designs by our in-house artists.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>Fresh From the Studio</h2>
+    <p class="sub">This week's favorite sets.</p>
+    <div class="gal">
+      <div class="tile t1">Blush French Tips</div>
+      <div class="tile t2">Golden Hour Chrome</div>
+      <div class="tile t3">Sage Garden Art</div>
+      <div class="tile t4">Lavender Ombre</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0" id="book">
+  <div class="wrap">
+    <div class="info">
+      <div class="box"><h3>Hours</h3><ul>
+        <li><span>Mon – Fri</span><b>9:30 AM – 7:30 PM</b></li>
+        <li><span>Saturday</span><b>9:30 AM – 7:30 PM</b></li>
+        <li><span>Sunday</span><b>11:00 AM – 5:00 PM</b></li></ul></div>
+      <div class="box"><h3>Visit Us</h3>
+        <p>4210 Rosewater Lane<br>Austin, TX 78704</p>
+        <p style="margin-top:10px">☎ (512) 555-0148<br>✉ hello@lotusglownails.example</p>
+        <p style="margin-top:10px">Tap the chat bubble below to book in under a minute — it answers 24/7, even after we close.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2>Like this website?</h2>
+  <p>This is a sample site built by Human Ascend AI — modern design, clear prices, and a chatbot that books customers day and night. Your business could have one just like it, on your own domain.</p>
+  <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdt9glQg-B3oCgvebP7LPmN3Sy1bqu2-_66PigbDvSYSmufuQ/viewform" target="_blank" rel="noopener">Get My Free Website Check</a>
+</div>
+
+<footer>Lotus Glow Nail Studio is a fictional business created to demonstrate a Human Ascend AI website. · Sample by <a href="https://humanascendai.com" style="color:#B4556E">Human Ascend AI</a></footer>
+
+<button id="chatBtn" aria-label="Chat with Lotus Glow">💬</button>
+<div id="chatPanel">
+  <div id="chatHead">Lotus Glow Assistant<span>Replies instantly — 24/7</span></div>
+  <div id="chatBody"><div class="msg">Hi! 👋 Welcome to Lotus Glow. Ask me about prices, hours, or booking.</div></div>
+  <div id="chatQuick">
+    <button data-q="hours">Hours</button>
+    <button data-q="prices">Prices</button>
+    <button data-q="book">Book now</button>
+  </div>
+</div>
+<script>
+var ANS={hours:"We're open Mon–Sat 9:30 AM–7:30 PM and Sun 11 AM–5 PM. Walk-ins welcome!",prices:"Gel Manicure $48 · Spa Pedicure $52 · Gel-X Extensions $68 · Classic Manicure $28. Full list is in Services above.",book:"Easy! Call us at (512) 555-0148 or tap Book an Appointment at the top — pick your service and time, and we'll confirm by text."};
+var btn=document.getElementById('chatBtn'),panel=document.getElementById('chatPanel'),body=document.getElementById('chatBody');
+btn.onclick=function(){panel.classList.toggle('open');};
+document.querySelectorAll('#chatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');body.innerHTML+='<div class="msg me">'+b.textContent+'</div><div class="msg">'+ANS[q]+'</div>';body.scrollTop=body.scrollHeight;};});
+</script>
+</body>
+</html>

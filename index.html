@@ -100,6 +100,15 @@
   @keyframes haTwinkle{from{opacity:.4}to{opacity:1}}
   .hero .wrap{position:relative;z-index:1}
   .hero p.herosub{color:var(--teal2);font-size:17px;font-weight:600;max-width:700px;margin:0 auto 22px}
+  .samp-card{display:block;text-decoration:none;color:var(--text)}
+  .samp-card:hover{border-color:var(--teal)}
+  .samp-vis{height:110px;border-radius:10px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;text-align:center;padding:10px;text-shadow:0 1px 6px rgba(0,0,0,.35);line-height:1.25}
+  .samp-nail{background:linear-gradient(135deg,#F3CBD5,#C4687F)}
+  .samp-rest{background:linear-gradient(135deg,#EFC394,#B5502A)}
+  .samp-hair{background:linear-gradient(135deg,#DDD5C2,#C9A24B)}
+  .samp-card h3{font-size:20px;margin-bottom:6px}
+  .samp-card p{color:var(--muted);font-size:15.5px;margin-bottom:14px}
+  .samp-view{color:var(--teal);font-weight:800}
 </style>
 </head>
 <body>
@@ -241,6 +250,33 @@
         <span class="tag">Managed for you</span>
         <p style="color:var(--muted)">Human Ascend runs this exact system live every day for a local service business — booking website, AI phone receptionist, AI chatbot, and automated review replies, all built and operated by our team. It's not a demo: it's the same stack our website plans are built from, running in a real business.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0" id="samples">
+  <div class="wrap">
+    <h2 data-i18n-html="h2samples">See it to believe it — <span class="t">sample websites</span></h2>
+    <p class="sub" data-i18n="samplesub">Tap a sample below to see exactly what your customers would get: a modern website with clear prices and a chatbot that answers and books 24/7. These are sample businesses — yours would be built around your real services.</p>
+    <div class="grid c3">
+      <a class="card samp-card" href="samples/nail.html">
+        <div class="samp-vis samp-nail">Lotus Glow Nail Studio</div>
+        <h3 data-i18n="samp1t">Nail Salon</h3>
+        <p data-i18n="samp1d">Services &amp; prices, photo gallery, hours — and a chat bubble that books appointments day and night.</p>
+        <span class="samp-view" data-i18n="sampview">View sample →</span>
+      </a>
+      <a class="card samp-card" href="samples/restaurant.html">
+        <div class="samp-vis samp-rest">Casa Verde Kitchen</div>
+        <h3 data-i18n="samp2t">Restaurant</h3>
+        <p data-i18n="samp2d">A menu customers can actually read on their phones, hours, reservations — with a chatbot answering 24/7.</p>
+        <span class="samp-view" data-i18n="sampview">View sample →</span>
+      </a>
+      <a class="card samp-card" href="samples/hair.html">
+        <div class="samp-vis samp-hair">Shear &amp; Shine Studio</div>
+        <h3 data-i18n="samp3t">Hair Salon</h3>
+        <p data-i18n="samp3d">Services &amp; prices, style gallery, online booking — the chatbot answers questions and holds appointments for you.</p>
+        <span class="samp-view" data-i18n="sampview">View sample →</span>
+      </a>
     </div>
   </div>
 </section>
@@ -401,8 +437,8 @@ ui();
 <div id="haLang"><button data-lang="en" class="on">EN</button><button data-lang="vi">Tiếng Việt</button><button data-lang="es">Español</button></div>
 <script>
 var HA_I18N={
-vi:{seasonline:"Mùa lễ là lúc khách hàng tìm kiếm doanh nghiệp địa phương nhiều nhất — một website cũ và chậm sẽ làm bạn mất khách trước khi họ kịp gọi.",seasoncta:"Kiểm Tra Website MIỄN PHÍ",herosub:"Đây là mùa tìm kiếm bận rộn nhất trong năm — đừng để website lỗi thời đẩy khách mùa lễ sang đối thủ của bạn.",badge:"Làm Lại Website + Chatbot AI",h1:'Website của bạn, làm lại mới.<br>Khách của bạn, <span class="t">được trả lời 24/7.</span>',cta:"Kiểm Tra Website Miễn Phí",fine:"Miễn phí · Không ràng buộc · Chỉ rõ chỗ nào đang hỏng trước khi bạn tốn một đồng.",teamtag:"Đội ngũ số của bạn",teamh3:"Người thật đứng sau AI",h2a:'Website nên là nhân viên chăm chỉ nhất của bạn. <span class="t">Nhưng lúc này, nó có thể là nhân viên yếu nhất.</span>',h2b:'Gói gồm những gì — <span class="t">làm lại toàn bộ, đội lo trọn gói</span>',h2c:'Cách làm <span class="t">việc</span>',h2d:'Giá phẳng, minh bạch <span class="t">rõ ràng</span>',h2e:'Chính chúng tôi <span class="t">đang dùng</span>',h2f:'Câu hỏi, <span class="t">được giải đáp</span>',h2g:'Xem website của bạn đang làm ăn ra sao — <span class="t">miễn phí.</span>',order:"Đặt gói này"},
-es:{seasonline:"La temporada de fiestas es cuando más clientes buscan negocios locales — un sitio web viejo y lento los pierde antes de que llamen.",seasoncta:"Revisión GRATUITA de tu Sitio",herosub:"Es la época de más búsquedas del año — no dejes que un sitio anticuado envíe a los clientes de las fiestas a tu competencia.",badge:"Reconstrucción de Sitio Web + Chatbot IA",h1:'Tu sitio web, reconstruido.<br>Tus clientes, <span class="t">atendidos 24/7.</span>',cta:"Revisión Gratuita de Mi Sitio",fine:"Gratis · Sin compromiso · Te mostramos exactamente qué está roto antes de gastar un dólar.",teamtag:"Tu equipo digital",teamh3:"Personas reales detrás de la IA",h2a:'Tu sitio web debería ser tu empleado más trabajador. <span class="t">Ahora mismo, podría ser el más débil.</span>',h2b:'Qué incluye — <span class="t">una reconstrucción completa, hecha por nosotros</span>',h2c:'Cómo <span class="t">funciona</span>',h2d:'Precios planos y <span class="t">transparentes</span>',h2e:'Nosotros mismos <span class="t">lo usamos</span>',h2f:'Preguntas, <span class="t">respondidas</span>',h2g:'Mira lo que tu sitio web está haciendo en realidad — <span class="t">gratis.</span>',order:"Pedir este paquete"}};
+vi:{seasonline:"Mùa lễ là lúc khách hàng tìm kiếm doanh nghiệp địa phương nhiều nhất — một website cũ và chậm sẽ làm bạn mất khách trước khi họ kịp gọi.",seasoncta:"Kiểm Tra Website MIỄN PHÍ",herosub:"Đây là mùa tìm kiếm bận rộn nhất trong năm — đừng để website lỗi thời đẩy khách mùa lễ sang đối thủ của bạn.",badge:"Làm Lại Website + Chatbot AI",h1:'Website của bạn, làm lại mới.<br>Khách của bạn, <span class="t">được trả lời 24/7.</span>',cta:"Kiểm Tra Website Miễn Phí",fine:"Miễn phí · Không ràng buộc · Chỉ rõ chỗ nào đang hỏng trước khi bạn tốn một đồng.",teamtag:"Đội ngũ số của bạn",teamh3:"Người thật đứng sau AI",h2a:'Website nên là nhân viên chăm chỉ nhất của bạn. <span class="t">Nhưng lúc này, nó có thể là nhân viên yếu nhất.</span>',h2b:'Gói gồm những gì — <span class="t">làm lại toàn bộ, đội lo trọn gói</span>',h2c:'Cách làm <span class="t">việc</span>',h2d:'Giá phẳng, minh bạch <span class="t">rõ ràng</span>',h2e:'Chính chúng tôi <span class="t">đang dùng</span>',h2f:'Câu hỏi, <span class="t">được giải đáp</span>',h2g:'Xem website của bạn đang làm ăn ra sao — <span class="t">miễn phí.</span>',order:"Đặt gói này",h2samples:'Xem tận mắt — <span class="t">các mẫu website</span>',samplesub:"Bấm vào một mẫu bên dưới để xem khách của bạn sẽ nhận được gì: website hiện đại, giá rõ ràng và chatbot trả lời + đặt lịch 24/7. Đây là các doanh nghiệp mẫu — web của bạn sẽ được xây quanh dịch vụ thật của bạn.",samp1t:"Tiệm Nail",samp1d:"Dịch vụ & bảng giá, thư viện ảnh, giờ mở cửa — và bong bóng chat đặt lịch ngày đêm.",samp2t:"Nhà Hàng",samp2d:"Thực đơn đọc rõ trên điện thoại, giờ mở cửa, đặt bàn — chatbot trả lời khách 24/7.",samp3t:"Tiệm Tóc",samp3d:"Dịch vụ & bảng giá, thư viện mẫu tóc, đặt lịch online — chatbot trả lời và giữ lịch cho bạn.",sampview:"Xem mẫu →"},
+es:{seasonline:"La temporada de fiestas es cuando más clientes buscan negocios locales — un sitio web viejo y lento los pierde antes de que llamen.",seasoncta:"Revisión GRATUITA de tu Sitio",herosub:"Es la época de más búsquedas del año — no dejes que un sitio anticuado envíe a los clientes de las fiestas a tu competencia.",badge:"Reconstrucción de Sitio Web + Chatbot IA",h1:'Tu sitio web, reconstruido.<br>Tus clientes, <span class="t">atendidos 24/7.</span>',cta:"Revisión Gratuita de Mi Sitio",fine:"Gratis · Sin compromiso · Te mostramos exactamente qué está roto antes de gastar un dólar.",teamtag:"Tu equipo digital",teamh3:"Personas reales detrás de la IA",h2a:'Tu sitio web debería ser tu empleado más trabajador. <span class="t">Ahora mismo, podría ser el más débil.</span>',h2b:'Qué incluye — <span class="t">una reconstrucción completa, hecha por nosotros</span>',h2c:'Cómo <span class="t">funciona</span>',h2d:'Precios planos y <span class="t">transparentes</span>',h2e:'Nosotros mismos <span class="t">lo usamos</span>',h2f:'Preguntas, <span class="t">respondidas</span>',h2g:'Mira lo que tu sitio web está haciendo en realidad — <span class="t">gratis.</span>',order:"Pedir este paquete",h2samples:'Míralo para creerlo — <span class="t">sitios de muestra</span>',samplesub:"Toca una muestra para ver exactamente lo que recibirían tus clientes: un sitio moderno con precios claros y un chatbot que responde y reserva 24/7. Son negocios de muestra — el tuyo se construiría con tus servicios reales.",samp1t:"Salón de Uñas",samp1d:"Servicios y precios, galería de fotos, horarios — y una burbuja de chat que reserva citas día y noche.",samp2t:"Restaurante",samp2d:"Un menú que se lee bien en el teléfono, horarios y reservas — con un chatbot que atiende a tus clientes 24/7.",samp3t:"Peluquería",samp3d:"Servicios y precios, galería de estilos y reservas en línea — el chatbot responde y agenda por ti.",sampview:"Ver muestra →"}};
 var HA_EN={};
 document.querySelectorAll('[data-i18n],[data-i18n-html]').forEach(function(el){var k=el.getAttribute('data-i18n')||el.getAttribute('data-i18n-html');HA_EN[k]=el.innerHTML;});
 function haSetLang(l){document.querySelectorAll('[data-i18n]').forEach(function(el){var k=el.getAttribute('data-i18n');el.textContent=(l==='en'?HA_EN[k]:(HA_I18N[l]&&HA_I18N[l][k])||HA_EN[k]);});document.querySelectorAll('[data-i18n-html]').forEach(function(el){var k=el.getAttribute('data-i18n-html');el.innerHTML=(l==='en'?HA_EN[k]:(HA_I18N[l]&&HA_I18N[l][k])||HA_EN[k]);});document.querySelectorAll('#haLang button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-lang')===l);});try{localStorage.setItem('ha-lang',l);}catch(e){}}

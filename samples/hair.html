@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shear &amp; Shine Studio — Portland, OR (Sample Website)</title>
+<meta name="description" content="Sample website built by Human Ascend AI: Shear & Shine Studio, a fictional hair salon in Portland, OR.">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#F6F4EF;color:#2B2E33;line-height:1.6;padding-top:40px}
+  .habar{position:fixed;top:0;left:0;right:0;height:40px;background:#0A0F2C;color:#EDF1FF;display:flex;align-items:center;justify-content:center;gap:14px;font-size:13px;z-index:99;padding:0 10px;text-align:center}
+  .habar a{color:#14E0C8;font-weight:700;text-decoration:none}
+  .habar .cta{background:#14E0C8;color:#04231D;border-radius:999px;padding:3px 12px}
+  header.site{background:#fff;border-bottom:1px solid #E3E0D8;position:sticky;top:40px;z-index:10}
+  .nav{max-width:1020px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .logo{font-size:23px;font-weight:800;color:#2E3440}
+  .logo span{color:#A3822F;font-weight:600;font-size:15px;display:block;letter-spacing:2px;text-transform:uppercase}
+  .nav a.tel{color:#2B2E33;text-decoration:none;font-weight:700;border:1px solid #D8D2C4;border-radius:999px;padding:7px 16px}
+  .hero{background:linear-gradient(135deg,#EDEAE0 0%,#DDD5C2 48%,#C9A24B 100%);text-align:center;padding:74px 20px 64px}
+  .hero h1{font-size:clamp(32px,6vw,52px);line-height:1.12;font-weight:900;color:#2E3440;margin-bottom:16px}
+  .hero p{max-width:640px;margin:0 auto 28px;color:#5A5A52;font-size:18px}
+  .btn{display:inline-block;background:#2E3440;color:#fff;font-weight:800;text-decoration:none;padding:14px 30px;border-radius:999px;font-size:16px}
+  .btn.alt{background:#fff;color:#2E3440;border:2px solid #2E3440}
+  section{padding:54px 20px}
+  .wrap{max-width:1020px;margin:0 auto}
+  h2{font-size:clamp(25px,4vw,34px);font-weight:800;color:#2E3440;margin-bottom:8px;text-align:center}
+  .sub{text-align:center;color:#7A786E;margin-bottom:32px}
+  .grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .svc{background:#fff;border:1px solid #E3E0D8;border-radius:14px;padding:22px}
+  .svc h3{font-size:18px;display:flex;justify-content:space-between;gap:10px}
+  .svc h3 b{color:#A3822F;white-space:nowrap}
+  .svc p{color:#7A786E;font-size:15px;margin-top:6px}
+  .gal{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .tile{height:170px;border-radius:14px;display:flex;align-items:flex-end;padding:14px;color:#fff;font-weight:700;text-shadow:0 1px 6px rgba(0,0,0,.4)}
+  .t1{background:linear-gradient(150deg,#C9A24B,#8A6D1F)}
+  .t2{background:linear-gradient(150deg,#8A93A6,#4A5468)}
+  .t3{background:linear-gradient(150deg,#B07A5A,#7A4A30)}
+  .t4{background:linear-gradient(150deg,#6B8A7A,#3E5A4C)}
+  .info{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .box{background:#fff;border:1px solid #E3E0D8;border-radius:14px;padding:24px}
+  .box h3{color:#2E3440;margin-bottom:10px}
+  .box p,.box li{color:#5A5A52;font-size:15.5px}
+  .box ul{list-style:none}
+  .box li{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed #E3E0D8}
+  .box li:last-child{border-bottom:none}
+  .cta-band{background:#2E3440;color:#EFEAD9;text-align:center;padding:52px 20px}
+  .cta-band h2{color:#fff}
+  .cta-band p{max-width:600px;margin:0 auto 24px;color:#D8D2C4}
+  .cta-band .btn{background:#14E0C8;color:#04231D}
+  footer{padding:28px 20px;text-align:center;color:#7A786E;font-size:14px}
+  #chatBtn{position:fixed;right:18px;bottom:18px;width:58px;height:58px;border-radius:50%;background:#2E3440;color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:50}
+  #chatPanel{position:fixed;right:18px;bottom:86px;width:min(330px,calc(100vw - 36px));background:#fff;border-radius:16px;box-shadow:0 16px 44px rgba(0,0,0,.3);display:none;flex-direction:column;overflow:hidden;z-index:50}
+  #chatPanel.open{display:flex}
+  #chatHead{background:#2E3440;color:#fff;padding:13px 16px;font-weight:800}
+  #chatHead span{display:block;font-weight:400;font-size:13px;opacity:.9}
+  #chatBody{padding:14px;height:230px;overflow-y:auto;font-size:14.5px}
+  .msg{background:#F1EEE5;border-radius:12px;padding:9px 12px;margin-bottom:9px}
+  .msg.me{background:#EFEFEF;text-align:right}
+  #chatQuick{display:flex;gap:8px;padding:0 14px 14px;flex-wrap:wrap}
+  #chatQuick button{border:1px solid #2E3440;color:#2E3440;background:#fff;border-radius:999px;padding:6px 13px;font-weight:700;cursor:pointer;font-size:13.5px}
+</style>
+</head>
+<body>
+<div class="habar"><span>✦ SAMPLE WEBSITE — built by <a href="https://humanascendai.com">Human Ascend AI</a></span><a class="cta" href="https://docs.google.com/forms/d/e/1FAIpQLSdt9glQg-B3oCgvebP7LPmN3Sy1bqu2-_66PigbDvSYSmufuQ/viewform" target="_blank" rel="noopener">Get a site like this — FREE check</a></div>
+
+<header class="site">
+  <div class="nav">
+    <div class="logo">Shear &amp; Shine<span>Studio · Portland</span></div>
+    <a class="tel" href="tel:+15035550163">☎ (503) 555-0163</a>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Great hair,<br>without the guesswork.</h1>
+  <p>Precision cuts, lived-in color and a chair that feels like yours. Book online in a minute — we'll take care of the rest.</p>
+  <a class="btn" href="#visit">Book an appointment</a>&nbsp; <a class="btn alt" href="#services">See services &amp; prices</a>
+</div>
+
+<section id="services">
+  <div class="wrap">
+    <h2>Services &amp; Prices</h2>
+    <p class="sub">Every visit starts with a free consultation.</p>
+    <div class="grid">
+      <div class="svc"><h3>Haircut <b>$55</b></h3><p>Consultation, cut, wash and style — for any length.</p></div>
+      <div class="svc"><h3>Cut + Color <b>$140</b></h3><p>Full color with a cut, wash and finish.</p></div>
+      <div class="svc"><h3>Balayage <b>from $180</b></h3><p>Sun-kissed, low-maintenance dimension.</p></div>
+      <div class="svc"><h3>Blowout <b>$45</b></h3><p>Smooth, bouncy finish — 45 minutes, out the door.</p></div>
+      <div class="svc"><h3>Beard Trim &amp; Shape <b>$25</b></h3><p>Sharp lines, hot towel, beard oil finish.</p></div>
+      <div class="svc"><h3>Kids Cut <b>$35</b></h3><p>Patient, gentle cuts for guests 12 and under.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>Fresh From the Chair</h2>
+    <p class="sub">Recent work by our stylists.</p>
+    <div class="gal">
+      <div class="tile t1">Golden Balayage</div>
+      <div class="tile t2">Slate Bob Cut</div>
+      <div class="tile t3">Copper Glow Color</div>
+      <div class="tile t4">Natural Curls, Defined</div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0" id="visit">
+  <div class="wrap">
+    <div class="info">
+      <div class="box"><h3>Hours</h3><ul>
+        <li><span>Tue – Fri</span><b>9:00 AM – 6:00 PM</b></li>
+        <li><span>Saturday</span><b>9:00 AM – 5:00 PM</b></li>
+        <li><span>Sun – Mon</span><b>Closed</b></li></ul></div>
+      <div class="box"><h3>Visit Us</h3>
+        <p>233 Alder Street<br>Portland, OR 97205</p>
+        <p style="margin-top:10px">☎ (503) 555-0163<br>✉ hello@shearshinestudio.example</p>
+        <p style="margin-top:10px">Not sure what to book? Tap the chat bubble — it answers 24/7 and can match you with the right stylist.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-band">
+  <h2>Like this website?</h2>
+  <p>This is a sample site built by Human Ascend AI — clear services and prices, easy online booking, and a chatbot that answers customers day and night. Your salon could have one just like it, on your own domain.</p>
+  <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdt9glQg-B3oCgvebP7LPmN3Sy1bqu2-_66PigbDvSYSmufuQ/viewform" target="_blank" rel="noopener">Get My Free Website Check</a>
+</div>
+
+<footer>Shear &amp; Shine Studio is a fictional business created to demonstrate a Human Ascend AI website. · Sample by <a href="https://humanascendai.com" style="color:#A3822F">Human Ascend AI</a></footer>
+
+<button id="chatBtn" aria-label="Chat with Shear and Shine">💬</button>
+<div id="chatPanel">
+  <div id="chatHead">Shear &amp; Shine Assistant<span>Replies instantly — 24/7</span></div>
+  <div id="chatBody"><div class="msg">Hi! ✂️ Welcome to Shear &amp; Shine. Ask me about prices, hours, or booking with a stylist.</div></div>
+  <div id="chatQuick">
+    <button data-q="hours">Hours</button>
+    <button data-q="prices">Prices</button>
+    <button data-q="book">Book now</button>
+  </div>
+</div>
+<script>
+var ANS={hours:"We're open Tue–Fri 9 AM–6 PM and Sat 9 AM–5 PM. Closed Sun–Mon.",prices:"Haircut $55 · Cut + Color $140 · Balayage from $180 · Blowout $45. Full list is in Services above.",book:"Happy to book you in! Call (503) 555-0163 or tell me the service and day here — we'll confirm by text."};
+var btn=document.getElementById('chatBtn'),panel=document.getElementById('chatPanel'),body=document.getElementById('chatBody');
+btn.onclick=function(){panel.classList.toggle('open');};
+document.querySelectorAll('#chatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');body.innerHTML+='<div class="msg me">'+b.textContent+'</div><div class="msg">'+ANS[q]+'</div>';body.scrollTop=body.scrollHeight;};});
+</script>
+</body>
+</html>
