@@ -518,20 +518,27 @@ function liveFlow(t){
 function go(){var t=input.value.trim();if(!t)return;add(t,true);input.value='';liveFlow(t);}
 send.onclick=go;input.addEventListener('keydown',function(e){if(e.key==='Enter')go();});
 document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');if(q==='pricing')bot(T('pricing'));else if(q==='check')bot(T('check'));else bot(T('human'));};});
-// ===== Ava VOICE mode (added 2026-11-25) =====
-// The mic button toggles voice mode. The browser's own speech recognition
-// (Web Speech API) turns the visitor's speech into text — vi-VN / en-US /
-// es-ES following the page language — and sends it over a websocket to the
-// relay's /voice endpoint. Ava's brain (Muse Wonder, the same one text
-// chat uses) streams the reply back sentence by sentence together with
-// neural-voice MP3 audio (Hoai My for Vietnamese, Jenny for English),
-// played in order. If relay audio for a sentence is missing, or the
-// browser blocks audio playback, the browser's own speechSynthesis speaks
-// the sentences instead. Text chat above is completely untouched.
+// ===== Ava VOICE mode (added 2026-11-25; FULLY STREAMING rebuild same day) =====
+// The mic button toggles voice mode. Every leg streams:
+//  - STT: the browser's speech recognition runs CONTINUOUS with interim
+//    results — partial transcripts appear live in the voice bar while the
+//    visitor is still speaking; each final transcript goes over the
+//    websocket to the relay's /voice endpoint the moment it lands.
+//  - Brain: Muse Wonder streams its reply token-by-token; the relay
+//    forwards each speakable clause the instant it is complete.
+//  - TTS: the relay synthesizes clause-by-clause on warm, persistent
+//    neural-voice connections (Hoai My for Vietnamese, Jenny for
+//    English) and streams the MP3 in small chunks; the widget appends
+//    chunks to ONE continuous MediaSource audio stream and starts
+//    playing from the first chunk — nothing waits for a full reply.
+//  Fallbacks: browsers without MediaSource audio get per-sentence blob
+//  playback of the same chunk stream; a sentence whose audio is missing
+//  (or blocked) is spoken by the browser's own speechSynthesis instead.
+//  Text chat above is completely untouched.
 var micBtn=document.getElementById('haChatMic'),voiceBar=document.getElementById('haVoiceBar');
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 var voiceOn=false,vws=null,recog=null,recogActive=false;
-var audioQ=[],curAudio=null,avaSpeaking=false,useSynth=false;
+var avaSpeaking=false,useSynth=false,serverTurnDone=false,playTimer=null;
 var replyEl=null,replyText='';
 function vbar(t){if(t){voiceBar.textContent=t;voiceBar.classList.add('show');}else{voiceBar.classList.remove('show');voiceBar.textContent='';}}
 function vlang(){return L()==='vi'?'vi-VN':(L()==='es'?'es-ES':'en-US');}
@@ -539,14 +546,21 @@ function stopRecog(){if(recog){try{recog.onend=null;recog.onerror=null;recog.onr
 function startRecog(){
  if(!SR||!voiceOn||avaSpeaking)return;
  stopRecog();
- recog=new SR();recog.lang=vlang();recog.interimResults=false;recog.continuous=false;recog.maxAlternatives=1;
+ recog=new SR();recog.lang=vlang();recog.interimResults=true;recog.continuous=true;recog.maxAlternatives=1;
+ var finalSeen=0;
  recog.onresult=function(e){
-  var t='';
-  for(var i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)t+=e.results[i][0].transcript;}
-  t=t.trim();if(!t)return;
-  add(escHtml(t),true);
-  if(vws&&vws.readyState===1){haHist.push({role:'user',content:t});vbar(T('vthink'));vws.send(JSON.stringify({type:'transcript',text:t}));}
-  else{liveFlow(t);}
+  var fin='',interim='';
+  for(var i=0;i<e.results.length;i++){
+   if(e.results[i].isFinal){if(i>=finalSeen)fin+=e.results[i][0].transcript;}
+   else interim+=e.results[i][0].transcript;
+  }
+  if(interim&&voiceOn&&!avaSpeaking)vbar(T('vlisten')+' '+interim);
+  fin=fin.trim();
+  if(!fin)return;
+  finalSeen=e.results.length;
+  add(escHtml(fin),true);
+  if(vws&&vws.readyState===1){haHist.push({role:'user',content:fin});vbar(T('vthink'));vws.send(JSON.stringify({type:'transcript',text:fin}));}
+  else{liveFlow(fin);}
  };
  recog.onerror=function(e){
   if(e.error==='not-allowed'||e.error==='service-not-allowed'){stopVoice();add(T('vmicdenied'),false);}
@@ -558,26 +572,81 @@ function speakSynth(text){
  if(!('speechSynthesis' in window))return;
  try{var u=new SpeechSynthesisUtterance(text);u.lang=vlang();window.speechSynthesis.speak(u);}catch(e){}
 }
-function playNext(){
- if(!audioQ.length){curAudio=null;avaSpeaking=false;micBtn.classList.remove('speaking');if(voiceOn){vbar(T('vlisten'));startRecog();}return;}
- var item=audioQ.shift();
- var url=URL.createObjectURL(item.blob);
- curAudio=new Audio(url);
- curAudio.onended=function(){URL.revokeObjectURL(url);playNext();};
- curAudio.onerror=function(){URL.revokeObjectURL(url);playNext();};
- var p=curAudio.play();
- if(p&&p.catch)p.catch(function(){URL.revokeObjectURL(url);useSynth=true;audioQ.length=0;speakSynth(item.text);curAudio=null;avaSpeaking=false;micBtn.classList.remove('speaking');if(voiceOn){vbar(T('vlisten'));startRecog();}});
+// --- Streaming audio player -------------------------------------------------
+// Preferred path: ONE continuous MediaSource stream for Ava's voice —
+// chunks are appended the moment they arrive and playback starts with the
+// first chunk, like a phone call. Fallback path: the same chunks are
+// collected per sentence and played as sentence blobs.
+var MSE_OK=('MediaSource' in window)&&!!window.MediaSource&&!!MediaSource.isTypeSupported&&MediaSource.isTypeSupported('audio/mpeg');
+var mseEl=null,mseSrc=null,mseBuf=null,mseQueue=[],mseURL=null;
+var blobChunks={},blobQueue=[],blobPlaying=false,curAudio=null;
+function mseEnsure(){
+ if(mseEl)return true;
+ try{
+  mseEl=new Audio();mseEl.preload='auto';
+  mseSrc=new MediaSource();mseURL=URL.createObjectURL(mseSrc);mseEl.src=mseURL;
+  mseSrc.addEventListener('sourceopen',function(){
+   try{mseBuf=mseSrc.addSourceBuffer('audio/mpeg');mseBuf.addEventListener('updateend',msePump);msePump();}
+   catch(e){MSE_OK=false;}
+  });
+  return true;
+ }catch(e){MSE_OK=false;return false;}
 }
-function queueAudio(b64,text){
- try{var bin=atob(b64),arr=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
- audioQ.push({blob:new Blob([arr],{type:'audio/mpeg'}),text:text});if(!curAudio)playNext();}catch(e){speakSynth(text);}
+function msePump(){
+ if(!mseBuf||mseBuf.updating||!mseQueue.length)return;
+ try{mseBuf.appendBuffer(mseQueue.shift());}catch(e){MSE_OK=false;}
+}
+function mseFeed(arr){
+ if(!mseEnsure())return false;
+ mseQueue.push(arr);msePump();
+ if(mseEl.paused){var p=mseEl.play();if(p&&p.catch)p.catch(function(){MSE_OK=false;speakSynth(replyText);});}
+ return true;
+}
+function mseTeardown(){
+ if(mseEl){try{mseEl.pause();}catch(e){}}
+ if(mseURL){try{URL.revokeObjectURL(mseURL);}catch(e){}}
+ mseEl=null;mseSrc=null;mseBuf=null;mseQueue=[];mseURL=null;
+}
+function blobFeed(seq,arr,isEnd){
+ if(arr){if(!blobChunks[seq])blobChunks[seq]=[];blobChunks[seq].push(arr);}
+ if(isEnd){var parts=blobChunks[seq];delete blobChunks[seq];if(parts&&parts.length){blobQueue.push(new Blob(parts,{type:'audio/mpeg'}));blobPlayNext();}}
+}
+function blobPlayNext(){
+ if(blobPlaying||!blobQueue.length)return;
+ blobPlaying=true;
+ var url=URL.createObjectURL(blobQueue.shift());
+ curAudio=new Audio(url);
+ curAudio.onended=function(){URL.revokeObjectURL(url);blobPlaying=false;curAudio=null;blobPlayNext();checkResume();};
+ curAudio.onerror=function(){URL.revokeObjectURL(url);blobPlaying=false;curAudio=null;blobPlayNext();checkResume();};
+ var p=curAudio.play();
+ if(p&&p.catch)p.catch(function(){useSynth=true;blobPlaying=false;curAudio=null;speakSynth(replyText);checkResume();});
+}
+function playbackDrained(){
+ if(MSE_OK&&mseEl){
+  if(mseQueue.length||(mseBuf&&mseBuf.updating))return false;
+  try{return mseEl.buffered.length===0||mseEl.currentTime>=mseEl.buffered.end(mseEl.buffered.length-1)-0.15;}catch(e){return false;}
+ }
+ return !blobPlaying&&!blobQueue.length;
+}
+function checkResume(){
+ if(!serverTurnDone)return;
+ if(playbackDrained()){serverTurnDone=false;avaSpeaking=false;micBtn.classList.remove('speaking');if(voiceOn){vbar(T('vlisten'));startRecog();}}
+ else{playTimer=setTimeout(checkResume,180);}
+}
+function feedAudioChunk(seq,b64){
+ if(useSynth)return;
+ var arr;
+ try{var bin=atob(b64);arr=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);}catch(e){return;}
+ if(MSE_OK){if(!mseFeed(arr))blobFeed(seq,arr,false);}
+ else blobFeed(seq,arr,false);
 }
 function ensureReplyEl(){if(!replyEl){replyEl=document.createElement('div');replyEl.className='haMsg haBot';body.appendChild(replyEl);}return replyEl;}
 function finishReplyBubble(){if(replyEl&&replyText){haHist.push({role:'assistant',content:replyText});}replyEl=null;replyText='';}
 function interruptAva(){
  if(vws&&vws.readyState===1){try{vws.send(JSON.stringify({type:'interrupt'}));}catch(e){}}
- audioQ.length=0;
- if(curAudio){try{curAudio.pause();}catch(e){}curAudio=null;}
+ serverTurnDone=false;if(playTimer){clearTimeout(playTimer);playTimer=null;}
+ mseTeardown();blobChunks={};blobQueue=[];
+ if(curAudio){try{curAudio.pause();}catch(e){}curAudio=null;blobPlaying=false;}
  if('speechSynthesis' in window){try{window.speechSynthesis.cancel();}catch(e){}}
  avaSpeaking=false;micBtn.classList.remove('speaking');
  finishReplyBubble();
@@ -588,16 +657,17 @@ function connectVoice(){
  vws.onmessage=function(ev){
   var m;try{m=JSON.parse(ev.data);}catch(e){return;}
   if(m.type==='sentence'){
-   if(!avaSpeaking){avaSpeaking=true;micBtn.classList.add('speaking');stopRecog();vbar(T('vspeak'));}
+   if(!avaSpeaking){avaSpeaking=true;serverTurnDone=false;micBtn.classList.add('speaking');stopRecog();vbar(T('vspeak'));}
    var el=ensureReplyEl();replyText+=(replyText?' ':'')+m.text;el.textContent=replyText;body.scrollTop=body.scrollHeight;
    if(useSynth)speakSynth(m.text);
   }
-  else if(m.type==='audio'){if(!useSynth)queueAudio(m.data,replyText);}
-  else if(m.type==='audio-missing'){speakSynth(m.text);}
+  else if(m.type==='audio-chunk'){feedAudioChunk(m.seq,m.data);}
+  else if(m.type==='audio-end'){if(!MSE_OK)blobFeed(m.seq,null,true);}
+  else if(m.type==='audio-missing'){if(!MSE_OK)blobFeed(m.seq,null,true);speakSynth(m.text);}
   else if(m.type==='turn-end'){
    finishReplyBubble();
    if(m.escalate)setTimeout(function(){add(T('human'),false);},400);
-   if(!curAudio&&!audioQ.length){avaSpeaking=false;micBtn.classList.remove('speaking');if(voiceOn){vbar(T('vlisten'));startRecog();}}
+   serverTurnDone=true;checkResume();
   }
  };
  vws.onclose=function(){if(voiceOn){stopVoice();add(T('vdown'),false);}};
