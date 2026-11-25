@@ -414,8 +414,8 @@
 #haChatInput{flex:1;background:#111838;border:1px solid #26306B;border-radius:12px;color:#EDF1FF;padding:10px 12px;font-size:14px;outline:none}
 #haChatSend{background:#14E0C8;color:#06231F;border:none;border-radius:12px;padding:10px 16px;font-weight:700;cursor:pointer}
 </style>
-<button id="haChatBtn" aria-label="Chat with Human Ascend AI"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.9 2 11.8c0 2.8 1.5 5.3 3.9 7L5.4 22l4-2.2c.8.2 1.7.3 2.6.3 5.5 0 10-3.9 10-8.8S17.5 3 12 3z"/></svg></button>
-<div id="haChatPanel" role="dialog" aria-label="Human Ascend AI chat">
+<button id="haChatBtn" aria-label="Chat with Ava — Human Ascend AI"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.9 2 11.8c0 2.8 1.5 5.3 3.9 7L5.4 22l4-2.2c.8.2 1.7.3 2.6.3 5.5 0 10-3.9 10-8.8S17.5 3 12 3z"/></svg></button>
+<div id="haChatPanel" role="dialog" aria-label="Chat with Ava — Human Ascend AI">
   <div id="haChatHead"><b>Human Ascend AI</b><span>We reply instantly — 24/7</span></div>
   <div id="haChatBody"></div>
   <div id="haChatQuick">
@@ -434,8 +434,8 @@ var PAYR='https://buy.stripe.com/fZudR8b9I6VE6dH0Y6bV600',PAYG='https://buy.stri
 var step=0,lead={};
 function L(){return window.__haLang||'en';}
 var S={
-en:{sub:"We reply instantly — 24/7",ph:"Type your message...",send:"Send",q1:"See pricing",q2:"Free website check",q3:"Talk to a human",
-greet:"Hi! I'm the Human Ascend AI assistant. Ask me about our website packages, the free website check, or type <b>start</b> and I'll take your details for a free check. One seasonal note: the holidays are the busiest search season of the year — if your website is slow, customers are finding your competitors first.",
+en:{sub:"Ava, your AI assistant · replies instantly — 24/7",ph:"Type your message...",send:"Send",q1:"See pricing",q2:"Free website check",q3:"Talk to a human",
+greet:"Hi! I'm Ava, your AI assistant at Human Ascend AI. Ask me about our website packages, the free website check, or type <b>start</b> and I'll take your details for a free check. One seasonal note: the holidays are the busiest search season of the year — if your website is slow, customers are finding your competitors first.",
 human:'Of course — let me connect you to our owner right away. You can call us now: <a href="tel:+18334825701">(833) 482-5701</a> (nationwide) or <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). Or type <b>start</b>, leave your name and phone, and the owner will call you back.',
 pricing:'Our packages: <b>Refresh</b> $499-$799 + $79/mo · <b>Growth</b> $999-$1,499 + $149/mo · <b>Full Stack</b> $1,999-$2,999 + $299/mo. Every package includes a modern rebuild on your own domain plus the AI chatbot. Want to order? Pay securely by card: <a href="'+PAYR+'" target="_blank" rel="noopener">Refresh</a> · <a href="'+PAYG+'" target="_blank" rel="noopener">Growth</a> · <a href="'+PAYF+'" target="_blank" rel="noopener">Full Stack</a> — or type <b>start</b> for a free check first.',
 check:'The free website check takes about 30 seconds: we review your current site and send a plain-English report of what is costing you customers. Type <b>start</b> and I will take your details right here, or <a href="'+AUDIT+'" target="_blank" rel="noopener">open the form</a>.',
@@ -447,8 +447,8 @@ domain:"You always keep your own domain, in your own account — we never hold i
 time:"Your free check arrives within 2 business days. Most rebuilds launch within 1-3 weeks, and your old site stays live the whole time.",
 hello:"Hello! Ask me about pricing, the free website check, online booking, or Google Care — or type <b>start</b> to begin your free check.",
 fallback:"I can help with pricing, the free website check, online booking, Google Care, and timelines. For anything else, type <b>human</b> and I will connect you to our owner — or type <b>start</b> for your free website check."},
-vi:{sub:"Trả lời ngay — 24/7",ph:"Nhập tin nhắn của bạn...",send:"Gửi",q1:"Xem bảng giá",q2:"Kiểm tra web miễn phí",q3:"Gặp người thật",
-greet:"Xin chào! Tôi là trợ lý AI của Human Ascend. Cứ hỏi tôi về các gói website, đợt kiểm tra miễn phí, hoặc gõ <b>start</b> để tôi lấy thông tin cho bạn kiểm tra miễn phí. Một lưu ý mùa lễ: đây là mùa khách tìm kiếm nhiều nhất trong năm — nếu website của bạn chậm, khách đang tìm thấy đối thủ của bạn trước.",
+vi:{sub:"Trợ lý Ava · trả lời ngay — 24/7",ph:"Nhập tin nhắn của bạn...",send:"Gửi",q1:"Xem bảng giá",q2:"Kiểm tra web miễn phí",q3:"Gặp người thật",
+greet:"Xin chào! Tôi là Ava, trợ lý AI của Human Ascend. Cứ hỏi tôi về các gói website, đợt kiểm tra miễn phí, hoặc gõ <b>start</b> để tôi lấy thông tin cho bạn kiểm tra miễn phí. Một lưu ý mùa lễ: đây là mùa khách tìm kiếm nhiều nhất trong năm — nếu website của bạn chậm, khách đang tìm thấy đối thủ của bạn trước.",
 human:'Dĩ nhiên — để tôi nối bạn tới chủ của chúng tôi ngay. Bạn gọi ngay được: <a href="tel:+18334825701">(833) 482-5701</a> (toàn quốc) hoặc <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). Hoặc gõ <b>start</b>, để lại tên và số điện thoại, chủ sẽ gọi lại cho bạn.',
 pricing:'Các gói của chúng tôi: <b>Refresh</b> $499-$799 + $79/tháng · <b>Growth</b> $999-$1,499 + $149/tháng · <b>Full Stack</b> $1,999-$2,999 + $299/tháng. Mọi gói đều gồm làm lại web hiện đại trên tên miền của bạn cộng chatbot AI. Muốn đặt? Thanh toán an toàn bằng thẻ: <a href="'+PAYR+'" target="_blank" rel="noopener">Refresh</a> · <a href="'+PAYG+'" target="_blank" rel="noopener">Growth</a> · <a href="'+PAYF+'" target="_blank" rel="noopener">Full Stack</a> — hoặc gõ <b>start</b> để kiểm tra miễn phí trước.',
 check:'Đợt kiểm tra website miễn phí mất khoảng 30 giây: chúng tôi xem web hiện tại của bạn và gửi báo cáo dễ hiểu về những gì đang làm bạn mất khách. Gõ <b>start</b> để tôi lấy thông tin ngay tại đây, hoặc <a href="'+AUDIT+'" target="_blank" rel="noopener">mở form</a>.',
@@ -460,8 +460,8 @@ domain:"Bạn luôn giữ tên miền của mình, trong tài khoản của mìn
 time:"Báo cáo kiểm tra miễn phí về trong 2 ngày làm việc. Hầu hết các đợt làm lại ra mắt trong 1–3 tuần, và web cũ của bạn vẫn chạy suốt thời gian đó.",
 hello:"Xin chào! Cứ hỏi tôi về bảng giá, kiểm tra miễn phí, đặt lịch online hoặc Google Care — hoặc gõ <b>start</b> để bắt đầu kiểm tra miễn phí.",
 fallback:"Tôi giúp được về bảng giá, kiểm tra website miễn phí, đặt lịch online, Google Care và thời gian thực hiện. Việc khác, gõ <b>human</b> để tôi nối bạn tới chủ — hoặc gõ <b>start</b> để kiểm tra miễn phí."},
-es:{sub:"Respondemos al instante — 24/7",ph:"Escribe tu mensaje...",send:"Enviar",q1:"Ver precios",q2:"Revisión gratuita",q3:"Hablar con un humano",
-greet:"¡Hola! Soy el asistente de IA de Human Ascend. Pregúntame por nuestros paquetes web, la revisión gratuita, o escribe <b>start</b> y tomo tus datos para una revisión gratuita. Una nota de temporada: las fiestas son la época de más búsquedas del año — si tu sitio es lento, los clientes están encontrando primero a tu competencia.",
+es:{sub:"Ava, tu asistente de IA · responde al instante — 24/7",ph:"Escribe tu mensaje...",send:"Enviar",q1:"Ver precios",q2:"Revisión gratuita",q3:"Hablar con un humano",
+greet:"¡Hola! Soy Ava, tu asistente de IA de Human Ascend. Pregúntame por nuestros paquetes web, la revisión gratuita, o escribe <b>start</b> y tomo tus datos para una revisión gratuita. Una nota de temporada: las fiestas son la época de más búsquedas del año — si tu sitio es lento, los clientes están encontrando primero a tu competencia.",
 human:'Claro — te conecto con nuestro dueño enseguida. Llámanos ahora: <a href="tel:+18334825701">(833) 482-5701</a> (todo el país) o <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). O escribe <b>start</b>, deja tu nombre y teléfono, y el dueño te llamará.',
 pricing:'Nuestros paquetes: <b>Refresh</b> $499-$799 + $79/mes · <b>Growth</b> $999-$1,499 + $149/mes · <b>Full Stack</b> $1,999-$2,999 + $299/mes. Cada paquete incluye una reconstrucción moderna en tu propio dominio más el chatbot de IA. ¿Pedir? Paga con tarjeta de forma segura: <a href="'+PAYR+'" target="_blank" rel="noopener">Refresh</a> · <a href="'+PAYG+'" target="_blank" rel="noopener">Growth</a> · <a href="'+PAYF+'" target="_blank" rel="noopener">Full Stack</a> — o escribe <b>start</b> para una revisión gratuita primero.',
 check:'La revisión gratuita toma unos 30 segundos: revisamos tu sitio actual y enviamos un informe simple de lo que te está costando clientes. Escribe <b>start</b> y tomo tus datos aquí mismo, o <a href="'+AUDIT+'" target="_blank" rel="noopener">abre el formulario</a>.',
