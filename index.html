@@ -264,6 +264,14 @@
   .sample-badge{display:inline-block;background:var(--teal);color:#04231D;font-weight:800;font-size:13px;letter-spacing:1.2px;padding:5px 14px;border-radius:999px;text-transform:uppercase;margin-bottom:16px}
   .report-card{border:2px solid var(--teal)}
   .report-card h3{font-size:19px;margin-bottom:10px}
+
+  .terms-agree{background:var(--surface);border:2px solid var(--teal);border-radius:16px;padding:20px 24px;margin:26px 0 6px;text-align:left}
+  .terms-agree label{display:flex;gap:12px;align-items:flex-start;font-size:16.5px;font-weight:600;cursor:pointer;color:var(--text)}
+  .terms-agree input[type=checkbox]{width:22px;height:22px;flex:none;margin-top:2px;accent-color:var(--teal);cursor:pointer}
+  .terms-agree a{color:var(--teal)}
+  .terms-hint{color:var(--muted);font-size:14.5px;margin-top:10px}
+  .terms-agree.flash{border-color:#FF7A7A;box-shadow:0 0 0 4px rgba(255,122,122,.25)}
+  a.order-btn.locked{opacity:.45}
 </style>
 </head>
 <body>
@@ -363,7 +371,7 @@
           <li>Basic on-site local SEO</li>
           <li>Monthly website care included in plan</li>
         </ul>
-        <a class="btn small" data-i18n="order" href="https://buy.stripe.com/fZudR8b9I6VE6dH0Y6bV600" target="_blank" rel="noopener">Order this package</a>
+        <a class="btn small order-btn locked" data-i18n="order" href="https://buy.stripe.com/fZudR8b9I6VE6dH0Y6bV600" target="_blank" rel="noopener">Order this package</a>
       </div>
       <div class="card price-card pop">
         <div class="pop-tag">⭐ MOST POPULAR</div>
@@ -376,7 +384,7 @@
           <li>Google Care included — profile optimization, review replies, ongoing Google management</li>
           <li>Deeper on-site SEO, more service pages</li>
         </ul>
-        <a class="btn small" data-i18n="order" href="https://buy.stripe.com/00w6oGelU6VE6dH7mubV601" target="_blank" rel="noopener">Order this package</a>
+        <a class="btn small order-btn locked" data-i18n="order" href="https://buy.stripe.com/00w6oGelU6VE6dH7mubV601" target="_blank" rel="noopener">Order this package</a>
       </div>
       <div class="card price-card">
         <h3>Full Stack</h3>
@@ -388,8 +396,12 @@
           <li>Full website + Google presence, run for you</li>
           <li>Priority care</li>
         </ul>
-        <a class="btn small" data-i18n="order" href="https://buy.stripe.com/9B600idhQbbU8lP5embV602" target="_blank" rel="noopener">Order this package</a>
+        <a class="btn small order-btn locked" data-i18n="order" href="https://buy.stripe.com/9B600idhQbbU8lP5embV602" target="_blank" rel="noopener">Order this package</a>
       </div>
+    </div>
+    <div class="terms-agree" id="termsAgreeBox">
+      <label for="termsAgree"><input type="checkbox" id="termsAgree"> I have read and agree to the <a href="/terms.html" target="_blank" rel="noopener">Service Terms</a> of Human Ascend AI.</label>
+      <p class="terms-hint" id="termsHint">Tick the box to enable the order buttons — payment is by card on Stripe's secure page.</p>
     </div>
     <p class="note">Paid upgrades on Refresh: online booking is a one-time $299 setup; Google Care is +$99/mo. Both are included in Growth and Full Stack. Localo, if you'd like us to use it for you, is billed at cost — never bundled into a plan. Brand-new websites built from scratch are quoted separately, from $1,499.</p>
     <p class="note"><b style="color:var(--text)">How ordering works:</b> pick your package and pay securely by card right here — we confirm your order the same business day and start your build. Each package link charges that package’s starting price; if your free website check shows a bigger job, we confirm the final quote with you before any extra charge. Monthly care then runs automatically month to month — a receipt lands in your email every cycle. Care is month-to-month: cancel anytime. Not sure which package fits? Start with the free website check.</p>
@@ -539,6 +551,7 @@
     <p style="margin-top:8px">Local team · We rebuild your website on your domain, with an AI chatbot that never sleeps.</p>
     <p style="margin-top:6px">🇺🇸 Based in Minnesota, USA · Serving businesses nationwide</p>
     <p style="margin-top:6px">12210 Urbank St NE #E, Blaine, MN 55449</p>
+    <p style="margin-top:6px"><a href="/terms.html">Service Terms</a></p>
     <p style="margin-top:6px"><a href="tel:+18334825701">(833) 482-5701</a> · <a href="tel:+16125095232">(612) 509-5232</a> · <a href="https://humanascendai.com">humanascendai.com</a></p>
   </div>
 </footer>
@@ -1037,6 +1050,31 @@ var HA_NODES = [];
     });
   };
   try{ var s = localStorage.getItem('ha-lang'); window.__haLang = s || 'en'; if(s && s!=='en') window.haSetLang(s); }catch(e){ window.__haLang='en'; }
+})();
+</script>
+
+<script>
+(function(){
+  var box=document.getElementById('termsAgreeBox'), cb=document.getElementById('termsAgree'), hint=document.getElementById('termsHint');
+  if(!box||!cb) return;
+  var btns=document.querySelectorAll('a.order-btn');
+  function sync(){
+    btns.forEach(function(b){ b.classList.toggle('locked', !cb.checked); });
+    if(hint) hint.style.display = cb.checked ? 'none' : '';
+  }
+  btns.forEach(function(b){
+    b.addEventListener('click', function(e){
+      if(!cb.checked){
+        e.preventDefault();
+        box.scrollIntoView({behavior:'smooth', block:'center'});
+        box.classList.add('flash');
+        setTimeout(function(){ box.classList.remove('flash'); }, 1600);
+        cb.focus();
+      }
+    });
+  });
+  cb.addEventListener('change', sync);
+  sync();
 })();
 </script>
 
