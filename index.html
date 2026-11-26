@@ -398,7 +398,7 @@
 <style>
 #haChatBtn{position:fixed;right:18px;bottom:18px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#14E0C8,#2DD4BF);border:none;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center}
 #haChatBtn svg{width:30px;height:30px;fill:#06231F}
-#haChatPanel{position:fixed;right:18px;bottom:88px;width:min(360px,calc(100vw - 24px));height:min(520px,calc(100dvh - 110px));background:#0B102A;border:1px solid #26306B;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.55);z-index:9999;display:none;flex-direction:column;overflow:hidden;font-family:inherit}
+#haChatPanel{position:fixed;right:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 24px));height:min(520px,calc(100dvh - 110px));height:min(520px,calc(100svh - 110px));background:#0B102A;border:1px solid #26306B;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.55);z-index:9999;display:none;flex-direction:column;overflow:hidden;font-family:inherit}
 #haChatPanel.open{display:flex}
 #haChatHead{background:#111838;padding:14px 16px;border-bottom:1px solid #26306B}
 #haChatHead b{color:#EDF1FF;font-size:15px}
@@ -420,6 +420,13 @@
 #haChatMic:disabled{opacity:.4;cursor:default}
 #haVoiceBar{display:none;padding:8px 14px;font-size:12.5px;color:#14E0C8;background:#0E1430;border-top:1px solid #26306B}
 #haVoiceBar.show{display:block}
+/* AVA TEXT-ONLY MODE (owner decision 2026-11-25): voice is paused until its latency meets the conversational standard, so the mic button is hidden. The voice code stays in the script below, gated by the VOICE_ENABLED flag - flip both together to re-open voice. */
+#haChatMic{display:none!important}
+/* Mobile chat-frame fix (owner report 2026-11-25: text clipped/covered on his phone). On small screens the panel spans edge to edge; the input uses 16px so iOS does not auto-zoom on focus (a main cause of clipped text). Panel height/bottom while the keyboard is open are managed by the visualViewport handler in the chat script. */
+@media (max-width:560px){
+#haChatPanel{left:12px;right:12px;width:auto}
+#haChatInput{font-size:16px}
+}
 </style>
 <button id="haChatBtn" aria-label="Chat with Ava — Human Ascend AI"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.9 2 11.8c0 2.8 1.5 5.3 3.9 7L5.4 22l4-2.2c.8.2 1.7.3 2.6.3 5.5 0 10-3.9 10-8.8S17.5 3 12 3z"/></svg></button>
 <div id="haChatPanel" role="dialog" aria-label="Chat with Ava — Human Ascend AI">
@@ -518,6 +525,31 @@ function liveFlow(t){
 function go(){var t=input.value.trim();if(!t)return;add(t,true);input.value='';liveFlow(t);}
 send.onclick=go;input.addEventListener('keydown',function(e){if(e.key==='Enter')go();});
 document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');if(q==='pricing')bot(T('pricing'));else if(q==='check')bot(T('check'));else bot(T('human'));};});
+// Keyboard-aware panel sizing (mobile fix 2026-11-25): on phones the
+// on-screen keyboard shrinks the VISUAL viewport but not the layout
+// viewport the fixed panel is measured against, so the keyboard covered
+// the input row and the newest messages. While the panel is open, track
+// visualViewport: when a keyboard is up, lift the panel above it and cap
+// its height to the visible area; when it closes, hand sizing back to the
+// CSS rules. Desktop geometry is untouched (no keyboard => no overrides).
+if(window.visualViewport){
+ var haVV=window.visualViewport,haFitT=null;
+ var haFitPanel=function(){
+  if(!panel.classList.contains('open')){panel.style.removeProperty('bottom');panel.style.removeProperty('height');return;}
+  var kb=Math.max(0,Math.round(window.innerHeight-haVV.height-haVV.offsetTop));
+  if(kb>0){
+   panel.style.bottom=(88+kb)+'px';
+   panel.style.height=Math.max(240,Math.min(520,Math.round(haVV.height)-100))+'px';
+   body.scrollTop=body.scrollHeight;
+  }else{
+   panel.style.removeProperty('bottom');panel.style.removeProperty('height');
+  }
+ };
+ var haFitSoon=function(){if(haFitT)clearTimeout(haFitT);haFitT=setTimeout(haFitPanel,60);};
+ haVV.addEventListener('resize',haFitSoon);
+ haVV.addEventListener('scroll',haFitPanel);
+ input.addEventListener('focus',haFitSoon);
+}
 // ===== Ava VOICE mode (added 2026-11-25; FULLY STREAMING rebuild same day) =====
 // The mic button toggles voice mode. Every leg streams:
 //  - STT (PRIMARY, listening fix 2026-11-25): the widget records REAL audio
@@ -537,6 +569,13 @@ document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=f
 //  playback of the same chunk stream; a sentence whose audio is missing
 //  (or blocked) is spoken by the browser's own speechSynthesis instead.
 //  Text chat above is completely untouched.
+// TEXT-ONLY MODE (owner decision 2026-11-25): Ava voice is PAUSED until its
+// end-to-end latency meets the conversational standard. While VOICE_ENABLED
+// is false, the mic button stays hidden (CSS above + inline guard below) and
+// every voice entry point refuses to start. All voice code is kept intact;
+// set VOICE_ENABLED=true and remove the #haChatMic display:none rule to
+// re-open voice.
+var VOICE_ENABLED=false;
 var micBtn=document.getElementById('haChatMic'),voiceBar=document.getElementById('haVoiceBar');
 var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 var voiceOn=false,vws=null,recog=null,recogActive=false;
@@ -778,6 +817,7 @@ function connectVoice(){
  vws.onerror=function(){try{vws.close();}catch(e){}};
 }
 function startVoice(){
+ if(!VOICE_ENABLED)return;
  if(!SR&&!CAP_OK){add(T('vnosr'),false);return;}
  voiceOn=true;micBtn.classList.add('on');vbar(T('von'));
  connectVoice();
@@ -789,11 +829,13 @@ function stopVoice(){
  vbar('');
 }
 micBtn.onclick=function(){
+ if(!VOICE_ENABLED)return;
  if(recording){finishCapture();return;}
  if(avaSpeaking){interruptAva();if(voiceOn){vbar(T('vlisten'));startListening();}return;}
  if(voiceOn)stopVoice();else startVoice();
 };
 if(!SR&&!CAP_OK){micBtn.disabled=true;micBtn.title='Voice is not supported in this browser';}
+if(!VOICE_ENABLED){micBtn.style.display='none';micBtn.setAttribute('aria-hidden','true');}
 ui();
 })();
 </script>
