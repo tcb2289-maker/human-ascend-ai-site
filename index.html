@@ -560,16 +560,24 @@
 <style>
 #haChatBtn{position:fixed;right:18px;bottom:18px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#14E0C8,#2DD4BF);border:none;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.45);z-index:9999;display:flex;align-items:center;justify-content:center}
 #haChatBtn svg{width:30px;height:30px;fill:#06231F}
-#haChatPanel{position:fixed;right:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 24px));height:min(520px,calc(100dvh - 110px));height:min(520px,calc(100svh - 110px));background:#0B102A;border:1px solid #26306B;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.55);z-index:9999;display:none;flex-direction:column;overflow:hidden;font-family:inherit}
+#haChatPanel{position:fixed;right:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 24px));height:min(520px,calc(100dvh - 110px));height:min(520px,calc(100svh - 110px));background:#0B102A;border:1px solid #26306B;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.55);z-index:10001;display:none;flex-direction:column;overflow:hidden;font-family:inherit}
 #haChatPanel.open{display:flex}
-#haChatHead{background:#111838;padding:14px 16px;border-bottom:1px solid #26306B}
+#haChatHead{background:#111838;padding:14px 16px;border-bottom:1px solid #26306B;display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
 #haChatHead b{color:#EDF1FF;font-size:15px}
 #haChatHead span{display:block;color:#14E0C8;font-size:12px;margin-top:2px}
+#haChatClose{background:transparent;border:1px solid #26306B;color:#A9B4D8;width:32px;height:32px;border-radius:50%;font-size:15px;line-height:1;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;padding:0}
+#haChatClose:hover{color:#EDF1FF;border-color:#14E0C8}
 #haChatBody{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
 .haMsg{max-width:85%;padding:10px 12px;border-radius:14px;font-size:14px;line-height:1.45}
 .haBot{background:#18204A;color:#EDF1FF;align-self:flex-start;border-bottom-left-radius:4px}
 .haUser{background:#14E0C8;color:#06231F;align-self:flex-end;border-bottom-right-radius:4px}
 .haMsg a{color:#2DD4BF;font-weight:700}
+.haTyping{display:flex;align-items:center;gap:8px;color:#A9B4D8}
+.haDots{display:inline-flex;gap:4px}
+.haDots i{width:6px;height:6px;border-radius:50%;background:#14E0C8;display:block;animation:haBlink 1.2s infinite}
+.haDots i:nth-child(2){animation-delay:.2s}
+.haDots i:nth-child(3){animation-delay:.4s}
+@keyframes haBlink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 #haChatQuick{display:flex;gap:8px;flex-wrap:wrap;padding:0 14px 10px}
 #haChatQuick button{background:#111838;color:#A9B4D8;border:1px solid #26306B;border-radius:999px;padding:7px 12px;font-size:12.5px;cursor:pointer}
 #haChatRow{display:flex;gap:8px;padding:12px;border-top:1px solid #26306B;background:#0B102A}
@@ -584,15 +592,16 @@
 #haVoiceBar.show{display:block}
 /* AVA TEXT-ONLY MODE (owner decision 2026-11-25): voice is paused until its latency meets the conversational standard, so the mic button is hidden. The voice code stays in the script below, gated by the VOICE_ENABLED flag - flip both together to re-open voice. */
 #haChatMic{display:none!important}
-/* Mobile chat-frame fix (owner report 2026-11-25: text clipped/covered on his phone). On small screens the panel spans edge to edge; the input uses 16px so iOS does not auto-zoom on focus (a main cause of clipped text). Panel height/bottom while the keyboard is open are managed by the visualViewport handler in the chat script. */
+/* Mobile chat-frame fix (owner report 2026-11-25: text clipped/covered on his phone). On small screens the panel spans edge to edge; the input uses 16px so iOS does not auto-zoom on focus (a main cause of clipped text). Panel height/bottom while the keyboard is open are managed by the visualViewport handler in the chat script. FULL-SCREEN upgrade (owner direction 2026-11-27): on phones the open panel covers the whole screen as its own dedicated chat screen — nothing of the page shows through or covers it; the X button in the header closes it and returns the visitor to the page exactly where they were. While open, the visualViewport handler pins the panel to the visible viewport so the on-screen keyboard never covers the input row. */
 @media (max-width:560px){
-#haChatPanel{left:12px;right:12px;width:auto}
+#haChatPanel{left:0;right:0;top:0;bottom:0;width:auto;height:auto;border:none;border-radius:0}
+#haChatRow{padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
 #haChatInput{font-size:16px}
 }
 </style>
 <button id="haChatBtn" aria-label="Chat with Ava — Human Ascend AI"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.9 2 11.8c0 2.8 1.5 5.3 3.9 7L5.4 22l4-2.2c.8.2 1.7.3 2.6.3 5.5 0 10-3.9 10-8.8S17.5 3 12 3z"/></svg></button>
 <div id="haChatPanel" role="dialog" aria-label="Chat with Ava — Human Ascend AI">
-  <div id="haChatHead"><b>Human Ascend AI</b><span>We reply instantly — 24/7</span></div>
+  <div id="haChatHead"><div><b>Human Ascend AI</b><span>We reply instantly — 24/7</span></div><button id="haChatClose" type="button" aria-label="Close chat" title="Close chat">&#10005;</button></div>
   <div id="haChatBody"></div>
   <div id="haChatQuick">
     <button data-q="pricing">See pricing</button>
@@ -611,7 +620,7 @@ var PAYR='https://buy.stripe.com/fZudR8b9I6VE6dH0Y6bV600',PAYG='https://buy.stri
 var step=0,lead={};
 function L(){return window.__haLang||'en';}
 var S={
-en:{sub:"Ava, your AI assistant · replies instantly — 24/7",ph:"Type your message...",send:"Send",q1:"See pricing",q2:"Free website check",q3:"Talk to a human",
+en:{sub:"Ava, your AI assistant · replies instantly — 24/7",ph:"Type your message...",send:"Send",typing:"Ava is replying...",q1:"See pricing",q2:"Free website check",q3:"Talk to a human",
 greet:"Hi! I'm Ava, your AI assistant at Human Ascend AI. Ask me about our website packages, the free website check, or type <b>start</b> and I'll take your details for a free check. One seasonal note: the holidays are the busiest search season of the year — if your website is slow, customers are finding your competitors first.",
 human:'Of course — let me connect you to our owner right away. You can call us now: <a href="tel:+18334825701">(833) 482-5701</a> (nationwide) or <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). Or type <b>start</b>, leave your name and phone, and the owner will call you back.',
 pricing:'Our packages: <b>Refresh</b> $499-$799 + $79/mo · <b>Growth</b> $999-$1,499 + $149/mo · <b>Full Stack</b> $1,999-$2,999 + $299/mo. Every package includes a modern rebuild on your own domain plus the AI chatbot. Want to order? Pay securely by card: <a href="'+PAYR+'" target="_blank" rel="noopener">Refresh</a> · <a href="'+PAYG+'" target="_blank" rel="noopener">Growth</a> · <a href="'+PAYF+'" target="_blank" rel="noopener">Full Stack</a> — or type <b>start</b> for a free check first.',
@@ -625,7 +634,7 @@ time:"Your free check arrives within 2 business days. Most rebuilds launch withi
 hello:"Hello! Ask me about pricing, the free website check, online booking, or Google Care — or type <b>start</b> to begin your free check.",
 fallback:"I can help with pricing, the free website check, online booking, Google Care, and timelines. For anything else, type <b>human</b> and I will connect you to our owner — or type <b>start</b> for your free website check.",
 von:"Voice on — tap the mic and just speak. Tap it again to turn voice off.",voff:"Voice off",vlisten:"Listening… speak now",vspeak:"Ava is speaking — tap the mic to interrupt",vthink:"Ava is thinking…",vnosr:"Voice input is not supported in this browser — please type instead.",vmicdenied:"Microphone is blocked — please allow mic access in your browser, or keep typing.",vdown:"Voice is unavailable right now — text chat still works.",vnohear:"I couldn't catch that — please try speaking again."},
-vi:{sub:"Trợ lý Ava · trả lời ngay — 24/7",ph:"Nhập tin nhắn của bạn...",send:"Gửi",q1:"Xem bảng giá",q2:"Kiểm tra web miễn phí",q3:"Gặp người thật",
+vi:{sub:"Trợ lý Ava · trả lời ngay — 24/7",ph:"Nhập tin nhắn của bạn...",send:"Gửi",typing:"Ava đang trả lời...",q1:"Xem bảng giá",q2:"Kiểm tra web miễn phí",q3:"Gặp người thật",
 greet:"Xin chào! Tôi là Ava, trợ lý AI của Human Ascend. Cứ hỏi tôi về các gói website, đợt kiểm tra miễn phí, hoặc gõ <b>start</b> để tôi lấy thông tin cho bạn kiểm tra miễn phí. Một lưu ý mùa lễ: đây là mùa khách tìm kiếm nhiều nhất trong năm — nếu website của bạn chậm, khách đang tìm thấy đối thủ của bạn trước.",
 human:'Dĩ nhiên — để tôi nối bạn tới chủ của chúng tôi ngay. Bạn gọi ngay được: <a href="tel:+18334825701">(833) 482-5701</a> (toàn quốc) hoặc <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). Hoặc gõ <b>start</b>, để lại tên và số điện thoại, chủ sẽ gọi lại cho bạn.',
 pricing:'Các gói của chúng tôi: <b>Refresh</b> $499-$799 + $79/tháng · <b>Growth</b> $999-$1,499 + $149/tháng · <b>Full Stack</b> $1,999-$2,999 + $299/tháng. Mọi gói đều gồm làm lại web hiện đại trên tên miền của bạn cộng chatbot AI. Muốn đặt? Thanh toán an toàn bằng thẻ: <a href="'+PAYR+'" target="_blank" rel="noopener">Refresh</a> · <a href="'+PAYG+'" target="_blank" rel="noopener">Growth</a> · <a href="'+PAYF+'" target="_blank" rel="noopener">Full Stack</a> — hoặc gõ <b>start</b> để kiểm tra miễn phí trước.',
@@ -639,7 +648,7 @@ time:"Báo cáo kiểm tra miễn phí về trong 2 ngày làm việc. Hầu h�
 hello:"Xin chào! Cứ hỏi tôi về bảng giá, kiểm tra miễn phí, đặt lịch online hoặc Google Care — hoặc gõ <b>start</b> để bắt đầu kiểm tra miễn phí.",
 fallback:"Tôi giúp được về bảng giá, kiểm tra website miễn phí, đặt lịch online, Google Care và thời gian thực hiện. Việc khác, gõ <b>human</b> để tôi nối bạn tới chủ — hoặc gõ <b>start</b> để kiểm tra miễn phí.",
 von:"Đã bật giọng nói — bấm mic rồi cứ nói. Bấm lần nữa để tắt.",voff:"Đã tắt giọng nói",vlisten:"Đang nghe… bạn nói đi",vspeak:"Ava đang nói — bấm mic để ngắt lời",vthink:"Ava đang nghĩ…",vnosr:"Trình duyệt này không hỗ trợ nhập bằng giọng nói — bạn gõ chữ giúp nhé.",vmicdenied:"Mic đang bị chặn — hãy cho phép mic trong trình duyệt, hoặc tiếp tục gõ chữ.",vdown:"Giọng nói tạm thời chưa dùng được — chat chữ vẫn chạy bình thường.",vnohear:"Ava chưa nghe rõ — bạn nói lại giúp nhé."},
-es:{sub:"Ava, tu asistente de IA · responde al instante — 24/7",ph:"Escribe tu mensaje...",send:"Enviar",q1:"Ver precios",q2:"Revisión gratuita",q3:"Hablar con un humano",
+es:{sub:"Ava, tu asistente de IA · responde al instante — 24/7",ph:"Escribe tu mensaje...",send:"Enviar",typing:"Ava está respondiendo...",q1:"Ver precios",q2:"Revisión gratuita",q3:"Hablar con un humano",
 greet:"¡Hola! Soy Ava, tu asistente de IA de Human Ascend. Pregúntame por nuestros paquetes web, la revisión gratuita, o escribe <b>start</b> y tomo tus datos para una revisión gratuita. Una nota de temporada: las fiestas son la época de más búsquedas del año — si tu sitio es lento, los clientes están encontrando primero a tu competencia.",
 human:'Claro — te conecto con nuestro dueño enseguida. Llámanos ahora: <a href="tel:+18334825701">(833) 482-5701</a> (todo el país) o <a href="tel:+16125095232">(612) 509-5232</a> (Minnesota). O escribe <b>start</b>, deja tu nombre y teléfono, y el dueño te llamará.',
 pricing:'Nuestros paquetes: <b>Refresh</b> $499-$799 + $79/mes · <b>Growth</b> $999-$1,499 + $149/mes · <b>Full Stack</b> $1,999-$2,999 + $299/mes. Cada paquete incluye una reconstrucción moderna en tu propio dominio más el chatbot de IA. ¿Pedir? Paga con tarjeta de forma segura: <a href="'+PAYR+'" target="_blank" rel="noopener">Refresh</a> · <a href="'+PAYG+'" target="_blank" rel="noopener">Growth</a> · <a href="'+PAYF+'" target="_blank" rel="noopener">Full Stack</a> — o escribe <b>start</b> para una revisión gratuita primero.',
@@ -657,8 +666,14 @@ function T(k){var s=S[L()]||S.en;return s[k]||S.en[k];}
 function ui(){document.querySelector('#haChatHead span').textContent=T('sub');input.placeholder=T('ph');send.textContent=T('send');var q=document.querySelectorAll('#haChatQuick button');q[0].textContent=T('q1');q[1].textContent=T('q2');q[2].textContent=T('q3');}
 window.__haChatLang=ui;
 function add(t,me){var d=document.createElement('div');d.className='haMsg '+(me?'haUser':'haBot');d.innerHTML=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}
-function bot(t){setTimeout(function(){add(t,false)},250);}
-btn.onclick=function(){panel.classList.toggle('open');if(panel.classList.contains('open')){ui();if(!body.children.length)bot(T('greet'));}};
+var typingEl=null;
+function showTyping(){hideTyping();typingEl=document.createElement('div');typingEl.className='haMsg haBot haTyping';var tx=document.createElement('span');tx.textContent=T('typing');var dt=document.createElement('span');dt.className='haDots';dt.innerHTML='<i></i><i></i><i></i>';typingEl.appendChild(tx);typingEl.appendChild(dt);body.appendChild(typingEl);body.scrollTop=body.scrollHeight;}
+function hideTyping(){if(typingEl){if(typingEl.parentNode)typingEl.parentNode.removeChild(typingEl);typingEl=null;}}
+function bot(t){setTimeout(function(){hideTyping();add(t,false)},250);}
+function haOpenChat(){panel.classList.add('open');ui();if(!body.children.length)bot(T('greet'));if(window.__haFitPanel)window.__haFitPanel();}
+function haCloseChat(){panel.classList.remove('open');panel.style.removeProperty('bottom');panel.style.removeProperty('height');panel.style.removeProperty('top');}
+btn.onclick=function(){if(panel.classList.contains('open'))haCloseChat();else haOpenChat();};
+document.getElementById('haChatClose').onclick=haCloseChat;
 function scriptedFlow(t){
  if(step===1){lead.name=t;step=2;bot(T('askphone')(t));return;}
  if(step===2){lead.phone=t;step=3;bot(T('asksite'));return;}
@@ -681,12 +696,12 @@ function liveFlow(t){
  haHist.push({role:'user',content:t});
  fetch('https://desktop-dck3s42.tailfbecde.ts.net/ha/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:t,history:haHist.slice(0,-1)})})
  .then(function(r){if(!r.ok)throw new Error('relay');return r.json();})
- .then(function(j){if(!j.reply)throw new Error('empty');haHist.push({role:'assistant',content:j.reply});add(escHtml(j.reply).replace(/\n/g,'<br>'),false);})
+ .then(function(j){if(!j.reply)throw new Error('empty');haHist.push({role:'assistant',content:j.reply});hideTyping();add(escHtml(j.reply).replace(/\n/g,'<br>'),false);})
  .catch(function(){scriptedFlow(t);});
 }
-function go(){var t=input.value.trim();if(!t)return;add(t,true);input.value='';liveFlow(t);}
+function go(){var t=input.value.trim();if(!t)return;add(t,true);input.value='';showTyping();liveFlow(t);}
 send.onclick=go;input.addEventListener('keydown',function(e){if(e.key==='Enter')go();});
-document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=function(){var q=b.getAttribute('data-q');if(q==='pricing')bot(T('pricing'));else if(q==='check')bot(T('check'));else bot(T('human'));};});
+document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=function(){showTyping();var q=b.getAttribute('data-q');if(q==='pricing')bot(T('pricing'));else if(q==='check')bot(T('check'));else bot(T('human'));};});
 // Keyboard-aware panel sizing (mobile fix 2026-11-25): on phones the
 // on-screen keyboard shrinks the VISUAL viewport but not the layout
 // viewport the fixed panel is measured against, so the keyboard covered
@@ -697,7 +712,14 @@ document.querySelectorAll('#haChatQuick button').forEach(function(b){b.onclick=f
 if(window.visualViewport){
  var haVV=window.visualViewport,haFitT=null;
  var haFitPanel=function(){
-  if(!panel.classList.contains('open')){panel.style.removeProperty('bottom');panel.style.removeProperty('height');return;}
+  if(!panel.classList.contains('open')){panel.style.removeProperty('bottom');panel.style.removeProperty('height');panel.style.removeProperty('top');return;}
+  if(window.innerWidth<=560){
+   panel.style.top=Math.round(haVV.offsetTop)+'px';
+   panel.style.height=Math.round(haVV.height)+'px';
+   panel.style.removeProperty('bottom');
+   body.scrollTop=body.scrollHeight;
+   return;
+  }
   var kb=Math.max(0,Math.round(window.innerHeight-haVV.height-haVV.offsetTop));
   if(kb>0){
    panel.style.bottom=(88+kb)+'px';
@@ -707,6 +729,7 @@ if(window.visualViewport){
    panel.style.removeProperty('bottom');panel.style.removeProperty('height');
   }
  };
+ window.__haFitPanel=haFitPanel;
  var haFitSoon=function(){if(haFitT)clearTimeout(haFitT);haFitT=setTimeout(haFitPanel,60);};
  haVV.addEventListener('resize',haFitSoon);
  haVV.addEventListener('scroll',haFitPanel);
